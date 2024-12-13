@@ -1,0 +1,91 @@
+section{
+    min-height: calc(100lvh - 7rem);
+    padding: 1.5rem 12rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+form{
+    width: 45rem;
+    max-width: 100%;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+form input:nth-child(1), textarea{
+    grid-column: span 4;
+    padding: 1rem;
+    color: var(--text);
+    background-color: transparent;
+    border: 2px solid var(--secondary);
+    border-radius: 10px;
+    outline: none;
+}
+
+form select, #time, #cost{
+    grid-column: span 2;
+    padding: 1rem;
+    color: var(--text);
+    background-color: transparent;
+    border: 2px solid var(--secondary);
+    border-radius: 10px;
+    outline: none;
+}  
+
+form textarea{
+    min-height: 15rem;
+    resize: none;
+    color: var(--text);
+    font-size: .9em;
+}
+
+form #submit{
+    padding: 1rem;
+    color: var(--secondary);
+    font-weight: bold;
+    background-color: transparent;
+    border: 2px solid var(--secondary);
+    border-radius: 10px;
+    box-shadow: 0px 5px 0px var(--secondary);
+    cursor: pointer;
+}
+
+form #submit:active{
+    box-shadow: none;
+    transform: translateY(5px);
+}
+
+#ingredients {
+    position: relative;
+    grid-column: span 4;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+#ingredients input{
+    grid-column: span 1;
+    padding: 1rem;
+    color: var(--text);
+    background-color: transparent;
+    border: 2px solid var(--secondary);
+    border-radius: 10px;
+    outline: none;
+}
+
+#ingredients button{
+    position: absolute;
+    top: -.15rem;
+    right: -2rem;
+    color: var(--secondary);
+    font-size: 3em;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+#ingredients button:active{
+    transform: scale(.9);
+}

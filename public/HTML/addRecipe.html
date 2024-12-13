@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fat - Add Recipe</title>
+    <link rel="icon" href="../ASSETS/favicon.ico">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="../CSS/style.css">
+    <link rel="stylesheet" href="../CSS/header.css">
+    <link rel="stylesheet" href="../CSS/addRecipe.css">
+</head>
+<body onload="fetchUserData()">
+    <header>
+        <a href="/" class="logo" draggable="false">
+          <img src="ASSETS/logo.png" alt="Logo" draggable="false">
+          <span>Fat</span>
+        </a>
+        <nav>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/recipes.html">Recipes</a></li>
+            <li><a href="/list.html">List</a></li>
+            <li><a href="/addRecipe.html">Add</a></li>
+            <li><a href="/forum.html">Forum</a></li>
+          </ul>
+        </nav>
+        <a href="/signin.html" id="profile" draggable="false"></a>
+    </header>
+    <section>
+      <form onsubmit="event.preventDefault(); addRecipe();">
+        <input type="text" placeholder="Name" id="name">
+        <textarea placeholder="Description" id="description"></textarea>
+        <div id="ingredients">
+          <input type="text" placeholder="Ingredient" required>
+          <input type="text" placeholder="Ingredient" required>
+          <input type="text" placeholder="Ingredient" required>
+          <button type="button" onclick="addIngredient()">+</button>
+        </div>
+        <select id="difficulty">
+          <option value="0" selected disabled>Difficulty</option>
+          <option value="1">Easy</option>
+          <option value="2">Medium</option>
+          <option value="3">Hard</option>
+          <option value="4">Extreme</option>
+        </select>
+        <input type="number" placeholder="Time" id="time">
+        <input type="number" placeholder="Cost" id="cost">
+        <select id="category">
+          <option value="0" selected disabled>Category</option>
+          <option value="1">Meal</option>
+          <option value="2">Dessert</option>
+          <option value="3">Drink</option>
+          <option value="4">Cocktail</option>
+          <option value="5">Soup</option>
+      </select>
+      <button type="submit" id="submit">Add Recipe</button>
+      </form>
+    </section>
+    <footer></footer>
+
+    <!-- Script -->
+     <script src="../JS/addRecipe.js"></script>
+</body>
+</html>

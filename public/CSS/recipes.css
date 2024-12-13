@@ -1,0 +1,136 @@
+section{
+    padding: 1.5rem 12rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#search-container{
+    display: flex;
+    align-items: center;
+}
+
+#search-container input{
+    width: 100%;
+    padding: 1rem;
+    color: var(--text);
+    outline: none;
+    border: none;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    box-shadow: inset 4.5px 4.5px 4.5px #bebebe,
+            inset -4.5px -4.5px 4.6px #ffffff;
+}
+
+#search-container button{
+    padding: 1rem;
+    color: var(--primary);
+    font-weight: bold;
+    letter-spacing: .15rem;
+    background-color: var(--secondary);
+    border: none;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    cursor: pointer;
+}
+
+#filters-button{
+    width: fit-content;
+    background-color: transparent;
+    border: none;
+    display: flex;
+    align-items: end;
+    align-self: end;
+}
+
+#filters-button input{
+    appearance: none;
+    width: 2rem;
+    height: 2rem;
+    background: url(../../assets/filters.png) center/cover no-repeat;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+#filters-button span{
+    color: var(--secondary);
+    font-weight: bold;
+    letter-spacing: .15rem;
+    cursor: default;
+}
+
+#filters{
+    height: 0rem;
+    padding: 0rem 1rem;
+    background-color: var(--secondary2);
+    overflow: hidden;
+    transition: all .3s ease;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+#filters select{
+    width: 10rem;
+    padding: .5rem 1rem;
+    color: var(--text);
+    background-color: var(--primary);
+    border: 2px solid var(--secondary);
+    outline: none;
+    border-radius: 5px;
+}
+
+#filters button{
+    width: 2.5rem;
+    height: 2.5rem;
+    background: url('../../assets/reset.png') center/cover no-repeat;
+    border: none;
+    cursor: pointer;
+}
+
+#filters button:active{
+    transform: scale(.9);
+}
+
+#recipes{
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+}
+
+.recipe{
+    position: relative;
+    height: 15rem;
+    color: var(--text);
+    text-decoration: none;
+    background: url('../../assets/recipe.png') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+}
+
+.recipe:hover{
+    transform: scale(.95);
+}
+
+.recipe h3{
+    position: absolute;
+    width: 100%;
+    padding: .5rem 0rem;
+    text-align: center;
+    background-color: var(--primary2);
+    backdrop-filter: blur(2.5px);
+}
+
+.recipe input{
+    appearance: none;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 1rem;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    z-index: 999;
+}

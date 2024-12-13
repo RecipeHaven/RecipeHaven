@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fat - List</title>
+    <link rel="icon" href="../ASSETS/favicon.ico">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="../CSS/style.css">
+    <link rel="stylesheet" href="../CSS/header.css">
+    <link rel="stylesheet" href="../CSS/recipes.css">
+</head>
+<body onload="fetchRecipes()">
+    <header>
+        <a href="/" class="logo" draggable="false">
+          <img src="ASSETS/logo.png" alt="Logo" draggable="false">
+          <span>Fat</span>
+        </a>
+        <nav>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/recipes.html">Recipes</a></li>
+            <li><a href="/list.html">List</a></li>
+            <li><a href="/addRecipe.html">Add</a></li>
+            <li><a href="/forum.html">Forum</a></li>
+          </ul>
+        </nav>
+        <a href="/signin.html" id="profile" draggable="false"></a>
+    </header>
+    <section>
+        <div id="search-container">
+            <input type="search" placeholder="Search..." id="search">
+            <button onclick="applyFilters()">Search</button>
+        </div>
+        <div id="filters-button">
+            <input type="checkbox" onchange="openFilters(this)" #filtersCheckbox>
+            <!-- <span>Filters</span> -->
+        </div>
+        <article id="filters">
+            <select id="category" onchange="applyFilters()">
+                <option value="0" selected disabled>Category</option>
+                <option value="1">Meal</option>
+                <option value="2">Dessert</option>
+                <option value="3">Drink</option>
+            </select>
+    
+            <select id="difficulty" onchange="applyFilters()">
+                <option value="0" selected disabled>Difficulty</option>
+                <option value="1">Easy</option>
+                <option value="2">Medium</option>
+                <option value="3">Hard</option>
+                <option value="4">Extreme</option>
+            </select>
+    
+            <button type="reset" onclick="resetFilters()"></button>
+        </article>
+        <article id="recipes"></article>
+    </section>
+    <footer></footer>
+
+    <!-- Script -->
+    <script src="../JS/list.js"></script>
+</body>
+</html>

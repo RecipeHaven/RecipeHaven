@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fat - User</title>
+    <link rel="icon" href="../ASSETS/favicon.ico">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="../CSS/style.css">
+    <link rel="stylesheet" href="../CSS/header.css">
+    <link rel="stylesheet" href="../CSS/user.css">
+</head>
+<body onload="fetchUserData(), fetchRecipes()">
+    <header>
+        <a href="/" class="logo" draggable="false">
+          <img src="ASSETS/logo.png" alt="Logo" draggable="false">
+          <span>Fat</span>
+        </a>
+        <nav>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/recipes.html">Recipes</a></li>
+            <li><a href="/list.html">List</a></li>
+            <li><a href="/addRecipe.html">Add</a></li>
+            <li><a href="/forum.html">Forum</a></li>
+          </ul>
+        </nav>
+    </header>
+    <section>
+        <article id="profile-info">
+            <img src="../ASSETS/profile.png" alt="Profile photo">
+            <div>
+                <h1></h1>
+                <p></p>
+                <a href="/logout" onclick="logout()">Logout</a>
+            </div>
+        </article>
+        <article id="recipes"></article>
+    </section>
+    <footer></footer>
+
+    <!-- Script -->
+     <script src="../JS/user.js"></script>
+</body>
+</html>

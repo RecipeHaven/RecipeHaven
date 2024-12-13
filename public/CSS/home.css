@@ -1,0 +1,59 @@
+section{
+    padding: 1.5rem 12rem;
+    display: flex;
+    flex-direction: column;
+}
+
+#mainArticle{
+    min-height: 40lvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#mainArticle h1{
+    font-size: 5em;
+    color: var(--secondary);
+}
+
+#recipes{
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+}
+
+.recipe{
+    position: relative;
+    height: 15rem;
+    color: var(--text);
+    text-decoration: none;
+    background: url('../../assets/recipe.png') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+}
+
+.recipe:hover{
+    transform: scale(.95);
+}
+
+.recipe h3{
+    position: absolute;
+    width: 100%;
+    padding: .5rem 0rem;
+    text-align: center;
+    background-color: var(--primary2);
+    backdrop-filter: blur(2.5px);
+}
+
+.recipe input{
+    appearance: none;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 1rem;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    z-index: 999;
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fat - Home</title>
+    <link rel="icon" href="ASSETS/favicon.ico">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="CSS/header.css">
+    <link rel="stylesheet" href="CSS/home.css">
+</head>
+<body onload="fetchRecipes()">
+    <header>
+        <a href="/" class="logo" draggable="false">
+          <img src="ASSETS/logo.png" alt="Logo" draggable="false">
+          <span>Fat</span>
+        </a>
+        <nav>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/recipes.html">Recipes</a></li>
+            <li><a href="/list.html">List</a></li>
+            <li><a href="/addRecipe.html">Add</a></li>
+            <li><a href="/forum.html">Forum</a></li>
+          </ul>
+        </nav>
+        <a href="/signin.html" id="profile" draggable="false"></a>
+    </header>
+    <main>
+        <section>
+          <article id="mainArticle">
+            <h1>Food and Taste</h1>
+            <!-- <h1>Fat Food</h1> -->
+          </article>
+          <article id="recipes"></article>
+        </section>
+    </main>
+    <footer></footer>
+
+    <!-- Script -->
+     <script src="JS/home.js"></script>
+</body>
+</html>

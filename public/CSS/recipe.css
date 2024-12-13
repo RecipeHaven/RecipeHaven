@@ -1,0 +1,234 @@
+main{
+    min-height: calc(100lvh - 4rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* #recipe-info{
+    min-height: calc(100lvh - 6rem);
+} */
+
+#recipe-info article{
+    width: 30rem;
+    /* height: 2.8rem; */
+    height: fit-content;
+    padding: 1rem 2rem;
+    color: var(--primary);
+    background-color: var(--secondary);
+    border-bottom-right-radius: 50px;
+    border-bottom-left-radius: 50px;
+    transition: all 1s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#recipe-info h1{
+    position: relative;
+    color: var(--primary);
+    font-size: 2.5em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#recipe-info h1 input{
+    appearance: none;
+    margin-top: .25rem;
+    padding: 1rem;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    z-index: 999;
+}
+
+#recipe-info h1::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1rem;
+    width: 100%;
+    height: .25rem;
+    background-color: var(--primary);
+    border-radius: 25px;
+}
+
+#ingredients{
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+#ingredients p{
+    width: 14rem;
+    max-width: 100%;
+    padding: .8rem .8rem .8rem .8rem;
+    color: var(--text);
+    background-color: var(--primary);
+    border-radius: 10px;
+}
+
+#difficulty{
+    width: fit-content;
+    display: flex;
+    gap: .25rem;
+    align-items: center;
+    justify-content: center;
+}
+
+#difficulty img{
+    width: 1.5rem;
+}
+
+#description{
+    font-size: 1.1em;
+    line-height: 1.5rem;
+}
+
+#time-cost{
+    display: flex;
+    gap: 1rem;
+}
+
+#time-cost span{
+    display: flex;
+    gap: .25rem;
+    align-items: center;
+    justify-content: center;
+}
+
+#time-cost span img{
+    width: 1.5rem;
+}
+
+#category{
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+    align-items: center;
+    justify-content: center;
+}
+
+#category img{
+    width: 3rem;
+}
+
+#reviews{
+    width: 30rem;
+    padding: 2rem 0rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#reviews h1{
+    position: relative;
+    color: var(--secondary);
+    font-size: 2.5em;
+}
+
+#reviews h1:after{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1rem;
+    width: 100%;
+    height: .25rem;
+    background-color: var(--secondary);
+    border-radius: 25px;
+}
+
+#reviews article{
+    color: var(--secondary);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#reviews article div{
+    position: relative;
+    padding: 1rem;
+    color: var(--primary);
+    font-weight: bold;
+    background-color: var(--secondary);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+#reviews article div .username{
+    position: relative;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 1.1em;
+}
+
+/* #reviews article div .username:hover{
+    color: var(--text);
+} */
+
+#reviews article div .username::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -.5rem;
+    width: 100%;
+    height: .15rem;
+    background-color: var(--primary);
+    border-radius: 25px;
+}
+
+#reviews article div .delete{
+    position: absolute;
+    top: .25rem;
+    right: 1rem;
+    padding: 1rem;
+    background: url(../ASSETS/trash.png) center/contain no-repeat;
+    border: none;
+    cursor: pointer;
+}
+
+#reviews article div .delete:active{
+    transform: scale(.9);
+}
+
+#reviews article div .review{
+    padding: 0rem 1rem;
+}
+
+form{
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: end;
+}
+
+form textarea{
+    width: calc(100% - 2rem);
+    min-height: 5rem;
+    padding: 1rem;
+    color: var(--text);
+    outline: none;
+    resize: none;
+    border: none;
+    border-radius: 15px;
+    box-shadow: inset 4.5px 4.5px 4.5px #bebebe,
+            inset -4.5px -4.5px 4.6px #ffffff;
+}
+
+form button{
+    padding: 1rem;
+    color: var(--primary);
+    font-weight: bold;
+    letter-spacing: .15rem;
+    background-color: var(--secondary);
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+}
