@@ -8,21 +8,14 @@ header{
     justify-content: space-between;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
 .logo{
-    text-decoration: none;
-    display: flex;
-    align-items: end;
-}
-
-.logo img{
-    width: 3rem;
-    height: 3rem;
-}
-
-.logo span{
     color: var(--secondary);
-    font-size: 1.25em;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.8em;
     font-weight: bold;
+    text-decoration: none;
 }
 
 header nav ul{

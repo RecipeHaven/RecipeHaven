@@ -104,7 +104,7 @@ section{
     height: 15rem;
     color: var(--text);
     text-decoration: none;
-    background: url('../../assets/recipe.png') center/cover no-repeat;
+    /* background: url('../../assets/recipe.png') center/cover no-repeat; */
     display: flex;
     align-items: center;
 }

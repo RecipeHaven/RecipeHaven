@@ -1,11 +1,92 @@
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 const express = require('express')
 const axios = require('axios')
 const https = require('https')
 const path = require('path')
+const multer = require('multer');
+const { S3Client, PutObjectCommand, ListObjectsV2Command } = require('@aws-sdk/client-s3');
+
+// Configurar o cliente S3
+const s3 = new S3Client({
+    region: 'eu-north-1',
+    credentials: {
+        accessKeyId: 'AKIAU6VTTCFFUCOUTLEQ',
+        secretAccessKey: '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'
+    },
+});
 
 const router = express.Router()
 
 const url = 'https://localhost:7065/api' 
+
+const bucketName = 'fatphotos';
+
+// Configuração do multer para lidar com upload de arquivos
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+// // Função para obter os links das imagens
+// async function getBucketLinks() {
+//     try {
+//         const params = { Bucket: bucketName };
+//         const command = new ListObjectsV2Command(params);
+//         const data = await s3.send(command);
+
+//         if (!data.Contents || data.Contents.length === 0) {
+//             console.log('O bucket está vazio.');
+//             return [];
+//         }
+
+//         return data.Contents.map(item => 
+//             `https://${bucketName}.s3.eu-north-1.amazonaws.com/${item.Key}`
+//         );
+//     } catch (err) {
+//         console.error('Erro ao obter os links:', err);
+//         throw err;
+//     }
+// }
+
+// // Rota para obter os links das imagens
+// router.get('/images', async (req, res) => {
+//     try {
+//         const links = await getBucketLinks();
+//         res.json({ images: links });
+//     } catch (err) {
+//         res.status(500).json({ error: 'Erro ao obter os links das imagens' });
+//     }
+// });
+
+// Função para upload da imagem e retorno do link
+router.post('/upload', upload.single('image'), async (req, res) => {
+    const file = req.file;
+
+    if (!file) {
+        return res.status(400).send('Nenhum arquivo foi enviado.');
+    }
+
+    const fileName = `images/${Date.now()}_${file.originalname}`;
+    const params = {
+        Bucket: bucketName,
+        Key: fileName,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+    };
+
+    try {
+        const command = new PutObjectCommand(params);
+        await s3.send(command);
+
+        // Gerar o URL da imagem
+        const imageUrl = `https://${bucketName}.s3.${s3.config.region}.amazonaws.com/${fileName}`;
+
+        // Retornar o URL da imagem no corpo da resposta
+        res.status(200).json({ imageUrl });
+    } catch (error) {
+        console.error('Erro ao fazer upload da imagem:', error);
+        res.status(500).send('Erro ao fazer upload da imagem.');
+    }
+});
 
 router.get('/api/recipes', async (req, res) => {
     try {
@@ -212,11 +293,12 @@ router.get('/logout', (req, res) => {
 })
 
 router.post('/api/recipe', express.json(), async (req, res) => {
-    const { name, ingredients, description, difficultyId, time, cost, userId, categoryId } = req.body;
+    const { name, image, ingredients, description, difficultyId, time, cost, userId, categoryId } = req.body;
 
     try {
         const response = await axios.post(`${url}/Recipes`, {
             name,
+            image,
             ingredients,
             description,
             difficultyId,

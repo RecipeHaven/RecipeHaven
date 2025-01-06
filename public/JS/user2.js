@@ -49,6 +49,7 @@ async function fetchRecipes() {
             link.href = `/recipe.html/${recipe.id}`
             link.className = 'recipe'
             link.innerHTML = `<h3>${recipe.name}</h3> <input type='checkbox' id='${recipe.id}'>`
+            link.style.background = `url(${recipe.image}) center/cover`
             recipesList.appendChild(link)
         })
     } catch (error) {

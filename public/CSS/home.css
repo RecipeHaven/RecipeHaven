@@ -1,6 +1,7 @@
 section{
     padding: 1.5rem 12rem;
     display: flex;
+    gap: 2rem;
     flex-direction: column;
 }
 

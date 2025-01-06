@@ -13,10 +13,7 @@
 </head>
 <body onload="fetchUserData()">
     <header>
-        <a href="/" class="logo" draggable="false">
-          <img src="ASSETS/logo.png" alt="Logo" draggable="false">
-          <span>Fat</span>
-        </a>
+      <a href="/" class="logo" draggable="false">Cook Pad</a>
         <nav>
           <ul>
             <li><a href="/">Home</a></li>
@@ -29,8 +26,12 @@
         <a href="/signin.html" id="profile" draggable="false"></a>
     </header>
     <section>
-      <form onsubmit="event.preventDefault(); addRecipe();">
+      <form onsubmit="event.preventDefault(); addRecipe();" id="uploadForm">
         <input type="text" placeholder="Name" id="name">
+        <div id="file-container">
+          <input type="file" id="file-input" accept="image/*" hidden>
+          <label for="file-input" id="custom-file-label">Select Image</label>
+        </div>
         <textarea placeholder="Description" id="description"></textarea>
         <div id="ingredients">
           <input type="text" placeholder="Ingredient" required>
@@ -45,7 +46,7 @@
           <option value="3">Hard</option>
           <option value="4">Extreme</option>
         </select>
-        <input type="number" placeholder="Time" id="time">
+        <input type="number" placeholder="Time (in minutes)" id="time">
         <input type="number" placeholder="Cost" id="cost">
         <select id="category">
           <option value="0" selected disabled>Category</option>

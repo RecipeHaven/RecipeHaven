@@ -33,8 +33,40 @@ async function addRecipe() {
                             .map(input => input.value)
                             .join(', ')
 
+    const imageFile = document.getElementById('file-input').files[0]
+    const image = document.getElementById('file-input').files[0]?.name
+
+    // Se a imagem não for selecionada, não tenta fazer o upload
+    let correctedImageUrl = ''
+    if (imageFile) {
+        const formData = new FormData()
+        formData.append('image', imageFile)
+
+        try {
+            const uploadResponse = await fetch('http://localhost:3000/upload', {
+                method: 'POST',
+                body: formData,
+            })
+            if (uploadResponse.ok) {
+                const uploadResult = await uploadResponse.json()
+                const imageUrl = uploadResult.imageUrl
+                const imageName = imageUrl.split('images/')[1];
+                correctedImageUrl = `https://fatphotos.s3.eu-north-1.amazonaws.com/images/${imageName}`
+                
+            } else {
+                console.error('Erro ao enviar a imagem:', await uploadResponse.text())
+                alert('Falha ao fazer upload da imagem.')
+                return // Interrompe o fluxo se o upload falhar
+            }
+        } catch (error) {
+            console.error('Erro ao enviar a imagem:', error)
+            alert('Falha ao fazer upload da imagem.')
+            return
+        }
+    }     
     const recipeData = {
         name,
+        image: correctedImageUrl,
         ingredients,
         description,
         difficultyId,
@@ -74,3 +106,12 @@ function addIngredient() {
     ingredient.placeholder = 'Ingredient'
     document.getElementById('ingredients').appendChild(ingredient)
 }
+
+document.getElementById('file-input').addEventListener('change', function() {
+    const label = document.getElementById('custom-file-label')
+    if (this.files.length > 0) {
+      label.textContent = this.files[0].name
+    } else {
+      label.textContent = 'Select Image'
+    }
+})

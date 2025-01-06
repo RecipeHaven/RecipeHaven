@@ -3,6 +3,12 @@ async function fetchRecipes() {
         const response = await fetch('/api/recipes')
         let recipes = await response.json()
 
+        // Embaralha as receitas aleatoriamente
+        recipes = recipes.sort(() => Math.random() - 0.5);
+
+        // Seleciona apenas as três primeiras
+        recipes = recipes.slice(0, 9);
+
         const recipesList = document.getElementById('recipes')
 
         recipesList.innerHTML = ''
@@ -12,6 +18,7 @@ async function fetchRecipes() {
             link.href = `/recipe.html/${recipe.id}`
             link.className = 'recipe'
             link.innerHTML = `<h3>${recipe.name}</h3> <input type='checkbox' id='${recipe.id}'>`
+            link.style.background = `url(${recipe.image}) center/cover`
             recipesList.appendChild(link)
         })
 
@@ -133,3 +140,29 @@ fetchRecipes().then(() => {
         });
     });
 });
+
+// async function fetchImageLinks() {
+//     try {
+//       const response = await fetch('http://localhost:3000/images');
+//       if (!response.ok) {
+//         throw new Error('Erro ao buscar links das imagens');
+//       }
+//       const data = await response.json();
+//       console.log('Links das imagens:', data.images);
+      
+//       // Exemplo de como usar os links (adicionando-os ao DOM)
+//       const imageContainer = document.getElementById('image-container');
+//       data.images.forEach(link => {
+//         const img = document.createElement('img');
+//         img.src = link;
+//         img.alt = 'Imagem do S3';
+//         img.style.width = '200px'; // Define o tamanho das imagens, por exemplo
+//         imageContainer.appendChild(img);
+//       });
+//     } catch (error) {
+//       console.error('Erro ao obter os links das imagens:', error);
+//     }
+//   }
+  
+//   // Chamar a função para buscar as imagens
+// //   fetchImageLinks();
