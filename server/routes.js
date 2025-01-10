@@ -5,7 +5,8 @@ const axios = require('axios')
 const https = require('https')
 const path = require('path')
 const multer = require('multer');
-const { S3Client, PutObjectCommand, ListObjectsV2Command } = require('@aws-sdk/client-s3');
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { getRecipes, getReviews, getUsers, getLists, getRecipesList, getForum, addReview, addlist, addRecipesList, addRecipe, addPost, addUser, deleteRecipesListById, deleteReviewById, deleteRecipeById, getRecipesByDifficuty, getRecipesByCategory, getRecipesByDifficutyAndCategory, getUserById, getRecipeById, getRecipesByName, editRecipe } = require('./models'); // Importa a função
 
 // Configurar o cliente S3
 const s3 = new S3Client({
@@ -25,37 +26,6 @@ const bucketName = 'fatphotos';
 // Configuração do multer para lidar com upload de arquivos
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-
-// // Função para obter os links das imagens
-// async function getBucketLinks() {
-//     try {
-//         const params = { Bucket: bucketName };
-//         const command = new ListObjectsV2Command(params);
-//         const data = await s3.send(command);
-
-//         if (!data.Contents || data.Contents.length === 0) {
-//             console.log('O bucket está vazio.');
-//             return [];
-//         }
-
-//         return data.Contents.map(item => 
-//             `https://${bucketName}.s3.eu-north-1.amazonaws.com/${item.Key}`
-//         );
-//     } catch (err) {
-//         console.error('Erro ao obter os links:', err);
-//         throw err;
-//     }
-// }
-
-// // Rota para obter os links das imagens
-// router.get('/images', async (req, res) => {
-//     try {
-//         const links = await getBucketLinks();
-//         res.json({ images: links });
-//     } catch (err) {
-//         res.status(500).json({ error: 'Erro ao obter os links das imagens' });
-//     }
-// });
 
 // Função para upload da imagem e retorno do link
 router.post('/upload', upload.single('image'), async (req, res) => {
@@ -90,195 +60,232 @@ router.post('/upload', upload.single('image'), async (req, res) => {
 
 router.get('/api/recipes', async (req, res) => {
     try {
-        const response = await axios.get(`${url}/Recipes`, {
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            })
-        })
-        res.json(response.data)
+        const recipes = await getRecipes();
+        res.json(recipes);
     } catch (error) {
-        console.error('Error fetching recipes:', error)
-        res.status(500).send('Error fetching recipes')
+        console.error('Erro ao buscar receitas da base de dados:', error);
+        res.status(500).send('Erro ao buscar receitas.');
     }
-})
+});
+
+router.patch('/api/recipes/update/:id', express.json(), async (req, res) => {
+    const { id } = req.params;
+    const { field, value } = req.body;
+
+    const validFields = ['Image', 'Ingredients', 'Description']; // Campos permitidos
+    if (!validFields.includes(field)) {
+        return res.status(400).json({ error: 'Invalid field' });
+    }
+
+    if (!value || value.trim() === '') {
+        return res.status(400).json({ error: 'Field value cannot be empty.' });
+    }
+
+    try {
+        await editRecipe(id, field, value);
+        res.status(200).json({ message: 'Recipe updated successfully' });
+    } catch (error) {
+        console.error('Erro ao atualizar a receita da base de dados:', error);
+        res.status(500).send('Erro ao atualizar receita.');
+    }
+});
+
+router.get('/api/recipes/:id', express.json(), async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const recipe = await getRecipeById(id)
+        res.json(recipe)
+    } catch (error) {
+        console.error('Erro ao buscar receita da base de dados:', error);
+        res.status(500).send('Erro ao buscar receita.');
+    }
+});
+
+router.get('/api/recipes/difficulty/:difficultyId', express.json(), async (req, res) => {
+    const { difficultyId } = req.params;
+
+    try {
+        const recipes = await getRecipesByDifficuty(difficultyId);
+        res.json(recipes);
+    } catch (error) {
+        console.error('Erro ao buscar a receita da base de dados:', error);
+        res.status(500).send('Erro ao buscar receita.');
+    }
+});
+
+router.get('/api/recipes/category/:categoryId', express.json(), async (req, res) => {
+    const { categoryId } = req.params;
+
+    try {
+        const recipes = await getRecipesByCategory(categoryId);
+        res.json(recipes);
+    } catch (error) {
+        console.error('Erro ao buscar a receita da base de dados:', error);
+        res.status(500).send('Erro ao buscar receita.');
+    }
+});
+
+router.get('/api/recipes/:difficultyId/:categoryId', express.json(), async (req, res) => {
+    const { difficultyId, categoryId } = req.params;
+
+    try {
+        const recipes = await getRecipesByDifficutyAndCategory(difficultyId, categoryId);
+        res.json(recipes);
+    } catch (error) {
+        console.error('Erro ao buscar a receita da base de dados:', error);
+        res.status(500).send('Erro ao buscar receita.');
+    }
+});
+
+router.get('/api/recipesByName/:name', express.json(), async (req, res) => {
+    const { name } = req.params;
+
+    try {
+        const recipes = await getRecipesByName(name)
+        res.json(recipes)
+    } catch (error) {
+        console.error('Erro ao buscar receitas da base de dados:', error);
+        res.status(500).send('Erro ao buscar receitas.');
+    }
+});
+
+router.delete('/api/recipes/:id', express.json(), async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        await deleteRecipeById(id);
+
+        res.status(200).send({ message: 'Receita removida da lista.' });
+    } catch (error) {
+        console.error('Error ao remover Receita:', error);
+        res.status(500).send({ error: 'Falha ao remover Receita.' });
+    }
+});
 
 router.get('/api/reviews', async (req, res) => {
     try {
-        const response = await axios.get(`${url}/Reviews`, {
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            })
-        })
-        res.json(response.data)
+        const reviews = await getReviews();
+        res.json(reviews);
     } catch (error) {
-        console.error('Error fetching reviews:', error)
-        res.status(500).send('Error fetching reviews')
+        console.error('Erro ao buscar reviews da base de dados:', error);
+        res.status(500).send('Erro ao buscar reviews.');
     }
-})
+});
 
 router.post('/api/reviews', express.json(), async (req, res) => {
     const { review, userId, recipeId } = req.body;
 
     try {
-        const response = await axios.post(`${url}/Reviews`, {
-            review,
-            userId,
-            recipeId
-        }, {
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            })
-        });
-
-        res.status(201).json(response.data);
+        await addReview({ review, userId, recipeId });
+        res.status(201).json({ message: 'Comentário adicionado com sucesso!' });
     } catch (error) {
-        console.error('Error creating reviews:', error);
-        res.status(500).send('Error creating review');
+        console.error('Erro ao adicionar comentário:', error);
+        res.status(500).json({ error: 'Erro ao adicionar comentário.' });
     }
 });
 
 router.delete('/api/reviews/:id', express.json(), async (req, res) => {
-    const reviewId = req.params.id;
+    const { id } = req.params;
 
     try {
-        const response = await axios.delete(`${url}/Reviews/${reviewId}`, {
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            })
-        });
+        await deleteReviewById(id);
 
-        if (response.status === 200) {
-            res.status(200).send("Review deleted successfully");
-        } else {
-            res.status(500).send("Failed to delete the Review");
-        }
+        res.status(200).send({ message: 'Review removida da lista.' });
     } catch (error) {
-        console.error('Error deleting review:', error);
-        res.status(500).send('Error deleting review');
+        console.error('Error ao remover Review:', error);
+        res.status(500).send({ error: 'Falha ao remover Review.' });
     }
 });
 
-// Rota para obter utilizadores da API
 router.get('/api/users', async (req, res) => {
     try {
-        const response = await axios.get(`${url}/Users`, {
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            })
-        })
-        res.json(response.data)
+        const users = await getUsers();
+        res.json(users);
     } catch (error) {
-        console.error('Error fetching users:', error)
-        res.status(500).send('Error fetching users')
+        console.error('Erro ao buscar users da base de dados:', error);
+        res.status(500).send('Erro ao buscar users.');
     }
-})
+});
+
+router.get('/api/users/:id', express.json(), async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const user = await getUserById(id)
+        res.json(user)
+    } catch (error) {
+        console.error('Erro ao buscar user da base de dados:', error);
+        res.status(500).send('Erro ao buscar user.');
+    }
+});
 
 router.post('/api/users', express.json(), async (req, res) => {
     const { name, email, password } = req.body;
 
     try {
-        const response = await axios.post(`${url}/Users`, {
-            name,
-            email,
-            password
-        }, {
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            })
-        });
-
-        res.status(201).json(response.data);
+        await addUser({ name, email, password });
+        res.status(201).json({ message: 'User criado com sucesso!' });
     } catch (error) {
-        console.error('Error creating recipe:', error);
-        res.status(500).send('Error creating recipe');
+        console.error('Erro ao criar User:', error);
+        res.status(500).json({ error: 'Erro ao criar User.' });
     }
 });
 
 router.get('/api/lists', async (req, res) => {
     try {
-        const response = await axios.get(`${url}/Lists`, {
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            })
-        })
-        res.json(response.data)
+        const lists = await getLists();
+        res.json(lists);
     } catch (error) {
-        console.log('Error fetching recipesList: ', error)
-        res.status(500).send('Error fetching recipesList')
+        console.error('Erro ao buscar lista da base de dados:', error);
+        res.status(500).send('Erro ao buscar lista.');
     }
-})
+});
 
 router.post('/api/lists', express.json(), async (req, res) => {
     const { userId } = req.body;
 
     try {
-        const response = await axios.post(`${url}/Lists`, {
-            userId
-        }, {
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            })
-        });
-
-        res.status(201).json(response.data);
+        await addlist({ userId });
+        res.status(201).json({ message: 'Lista criada com sucesso!' });
     } catch (error) {
-        console.error('Error creating recipe:', error);
-        res.status(500).send('Error creating recipe');
+        console.error('Erro ao criar lista:', error);
+        res.status(500).json({ error: 'Erro ao criar lista.' });
     }
 });
 
 router.get('/api/recipesList', async (req, res) => {
     try {
-        const response = await axios.get(`${url}/RecipesList`, {
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            })
-        })
-        res.json(response.data)
+        const recipesList = await getRecipesList();
+        res.json(recipesList);
     } catch (error) {
-        console.log('Error fetching recipesList: ', error)
-        res.status(500).send('Error fetching recipesList')
+        console.error('Erro ao buscar recipesList da base de dados:', error);
+        res.status(500).send('Erro ao buscar recipesList.');
     }
-})
+});
 
 router.post('/api/recipesList', express.json(), async (req, res) => {
     const { recipeId, listId } = req.body;
 
     try {
-        const response = await axios.post(`${url}/RecipesList`, {
-            recipeId,
-            listId
-        }, {
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            })
-        });
-
-        res.status(201).json(response.data);
+        await addRecipesList({ recipeId, listId });
+        res.status(201).json({ message: 'RecipesList adicionada com sucesso!' });
     } catch (error) {
-        console.error('Error creating recipe:', error);
-        res.status(500).send('Error creating recipe');
+        console.error('Erro ao adicionar RecipesList:', error);
+        res.status(500).json({ error: 'Erro ao adicionar RecipesList.' });
     }
 });
 
 router.delete('/api/recipesList/:id', express.json(), async (req, res) => {
-    const recipesListId = req.params.id;
+    const { id } = req.params;
 
     try {
-        const response = await axios.delete(`${url}/RecipesList/${recipesListId}`, {
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            })
-        });
+        await deleteRecipesListById(id);
 
-        if (response.status === 200) {
-            res.status(200).send("RecipeList deleted successfully");
-        } else {
-            res.status(500).send("Failed to delete the recipeList");
-        }
+        res.status(200).send({ message: 'Receita removida da lista.' });
     } catch (error) {
-        console.error('Error deleting recipeList:', error);
-        res.status(500).send('Error deleting recipeList');
+        console.error('Error ao remover receita:', error);
+        res.status(500).send({ error: 'Falha ao remover receita.' });
     }
 });
 
@@ -296,26 +303,33 @@ router.post('/api/recipe', express.json(), async (req, res) => {
     const { name, image, ingredients, description, difficultyId, time, cost, userId, categoryId } = req.body;
 
     try {
-        const response = await axios.post(`${url}/Recipes`, {
-            name,
-            image,
-            ingredients,
-            description,
-            difficultyId,
-            time,
-            cost,
-            userId,
-            categoryId
-        }, {
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false
-            })
-        });
-
-        res.status(201).json(response.data);
+        await addRecipe({ name, image, ingredients, description, difficultyId, time, cost, userId, categoryId });
+        res.status(201).json({ message: 'Receita criada com sucesso!' });
     } catch (error) {
-        console.error('Error creating recipe:', error);
-        res.status(500).send('Error creating recipe');
+        console.error('Erro ao criar Receita:', error);
+        res.status(500).json({ error: 'Erro ao criar Receita.' });
+    }
+});
+
+router.get('/api/forum', async (req, res) => {
+    try {
+        const forum = await getForum();
+        res.json(forum);
+    } catch (error) {
+        console.error('Erro ao buscar forum da base de dados:', error);
+        res.status(500).send('Erro ao buscar forum.');
+    }
+});
+
+router.post('/api/forum', express.json(), async (req, res) => {
+    const { message, date, userId } = req.body;
+
+    try {
+        await addPost({ message, date, userId });
+        res.status(201).json({ message: 'Post adicionado com sucesso!' });
+    } catch (error) {
+        console.error('Erro ao adicionar Post:', error);
+        res.status(500).json({ error: 'Erro ao adicionar Post.' });
     }
 });
 
@@ -348,12 +362,16 @@ router.get('/login.html', (req, res) => {
     res.sendFile(path.join(__dirname, '../public', 'HTML', 'login.html'))
 })
 
-router.get('/user.html', (req, res) => {
+router.get('/user.html/:id', (req, res) => {
     res.sendFile(path.join(__dirname, '../public', 'HTML', 'user.html'))
 })
 
-router.get('/user2.html/:id', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public', 'HTML', 'user2.html'))
+router.get('/forum.html', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public', 'HTML', 'forum.html'))
+})
+
+router.get('/admin.html', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public', 'HTML', 'admin.html'))
 })
 
 module.exports = router

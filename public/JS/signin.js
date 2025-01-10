@@ -6,10 +6,10 @@ async function signin() {
         let nameValue = document.getElementById('name').value
         let passValue = document.getElementById('pass').value
         
-        const user = users.find(user => user.name === nameValue && user.password === passValue)
+        const user = users.find(user => user.Name === nameValue && user.Password === passValue)
 
         if (user) {
-            localStorage.setItem('userId', user.id)
+            localStorage.setItem('userId', user.Id)
             window.location.replace('/')
         } else {
             console.log("Nenhum utilizador encontrado com as credenciais fornecidas.")

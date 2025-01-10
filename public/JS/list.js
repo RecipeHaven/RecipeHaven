@@ -1,192 +1,164 @@
-async function fetchRecipes() {
-    try {
-        const userId = localStorage.getItem('userId')
+import { createRecipesCard } from './recipesCard.js'
+import { fetchUserData } from './fetchUser.js'
 
-        const usersResponse = await fetch('/api/users')
-        let users = await usersResponse.json()
-        let user = users.find(user => user.id == userId)
-
-        const profile = document.getElementById('profile')
-
-        if(userId != null) {
-            profile.innerHTML = `<img src='ASSETS/profile.png' alt='Profile Photo' draggable='false'><span>${user.name}</span>`
-            profile.href = '/user.html'
-        } else {
-            profile.innerHTML = `<img src='ASSETS/profile.png' alt='Profile Photo' draggable='false'><span>Signin</span>`
-            profile.href = '/signin.html'
-        }
-
-        await applyFilters()
-    } catch (error) {
-        console.error('Error fetching recipes:', error)
-    }
-}
-
-async function applyFilters() {
-    try {
-        const recipesListResponse = await fetch('/api/recipesList')
-        const listResponse = await fetch('/api/lists')
-        const recipesResponse = await fetch('/api/recipes')
-
-        if (!recipesListResponse.ok || !recipesResponse.ok || !listResponse.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`)
-        }
-        
-        let recipes = await recipesResponse.json()
-        let recipesList = await recipesListResponse.json()
-        let lists = await listResponse.json()
-
-        const userId = localStorage.getItem('userId')
-
-        const categoryValue = document.getElementById('category').value
-        const difficultyValue = document.getElementById('difficulty').value
-        const recipesContainer = document.getElementById('recipes');
-        const search = document.getElementById('search')
-        var searchValue = search.value.toLowerCase()
-
-        recipesContainer.innerHTML = "" // Limpa a lista antes de adicionar novos elementos
-
-        const userList = lists.find(list => list.userId == userId)
-
-        const userRecipeIds = recipesList
-            .filter(recipeList => recipeList.listId == userList.id)
-            .map(recipeList => recipeList.recipeId);
-
-        // Aplica o filtro de categoria e dificuldade ao mesmo tempo, conforme necessário
-        recipes = recipes.filter(recipe =>
-            userRecipeIds.includes(recipe.id) &&
-                (categoryValue == 0 || recipe.categoryId == categoryValue) &&
-                (difficultyValue == 0 || recipe.difficultyId == difficultyValue) &&
-                (searchValue == '' || recipe.name.includes(searchValue) || recipe.name.toLowerCase().includes(searchValue))
-        );
-
-        // recipes = recipes.filter(recipe => recipeIds.includes(recipe.id))
-
-        // Exibe as receitas filtradas
-        recipes.forEach(recipe => {
-            const link = document.createElement('a')
-            link.href = `/recipe.html/${recipe.id}`
-            link.className = 'recipe'
-            link.innerHTML = `<h3>${recipe.name}</h3> <input type='checkbox' id='${recipe.id}'>`
-            link.style.background = `url(${recipe.image}) center/cover`
-            recipesContainer.appendChild(link)
-        });
-    } catch (error) {
-        console.error('Error applying filters:', error)
-    }
-}
-
-function resetFilters() {
-    document.getElementById('category').value = 0
-    document.getElementById('difficulty').value = 0
-    fetchRecipes()
-}
-  
-function openFilters(checkbox) {
-    if(checkbox.checked) {
-      document.getElementById('filters').style.height = '3rem'
+document.getElementById('search-button').addEventListener('click', async () => {
+    let search = document.getElementById('search').value.trim()
+    
+    if(search == '') {
+        createRecipesCard()
     } else {
-        document.getElementById('filters').style.height = '0rem'
-    }
-}
+        const response = await fetch(`/api/recipesByName/${search}`)
+        let recipes = await response.json()
 
-async function checkRecipesList() {
-    try {
         const recipesListResponse = await fetch('/api/recipesList');
         const recipesList = await recipesListResponse.json();
 
         const listsResponse = await fetch('/api/lists');
         const lists = await listsResponse.json();
 
-        const userId = localStorage.getItem('userId');
-        const list = lists.find(list => list.userId == userId);
+        const userId = localStorage.getItem('userId')
+
+        const list = lists.find(list => list.UserId == userId);
 
         const recipeIdsInList = recipesList
-            .filter(recipeList => recipeList.listId == list.id)
-            .map(recipeList => recipeList.recipeId);
+            .filter(recipeList => recipeList.ListId == list.Id)
+            .map(recipeList => recipeList.RecipeId);
 
-        const listButtons = document.querySelectorAll('a input[type="checkbox"]');
-        listButtons.forEach(listButton => {
-            const recipeId = listButton.id;
-            if(recipeIdsInList.includes(parseInt(recipeId))) {
-                listButton.checked = true;
-                listButton.style.background = 'url(../ASSETS/inList.png) center/contain no-repeat';
+        recipes = recipes.filter(recipe => recipeIdsInList.includes(recipe.Id))
+
+        const recipesContainer = document.getElementById('recipes');
+        recipesContainer.innerHTML = ''; 
+        
+        recipes.forEach(recipe => {
+            const link = document.createElement('a')
+            const image = document.createElement('img')
+            const info = document.createElement('div')
+            link.href = `/recipe.html/${recipe.Id}`
+            link.className = 'recipe'
+            info.innerHTML = `<h3>${recipe.Name}</h3> <input type='checkbox' id='${recipe.Id}' class='list-input'>`
+            if(recipe.image != '') {
+                image.src = recipe.Image
             } else {
-                listButton.checked = false;
-                listButton.style.background = 'url(../ASSETS/notInList.png) center/contain no-repeat';
+                image.src = '../ASSETS/recipe.png'
             }
-        });
-    } catch (error) {
-        console.error('An error occurred while checking recipes list:', error);
+            link.appendChild(image)
+            link.appendChild(info)
+            recipesContainer.appendChild(link)
+        })
     }
-}
+})
 
-async function addToList(checkbox) {
-    try {
-        const listsResponse = await fetch('/api/lists')
-        const recipesListresponse = await fetch('/api/recipesList')
-        const recipesList = await recipesListresponse.json()
-        const lists = await listsResponse.json()
+document.querySelector('#filters button').addEventListener('click', () => {
+    document.getElementById('category').value = 0
+    document.getElementById('difficulty').value = 0
+    createRecipesCard()
+})
 
-        const userId = localStorage.getItem('userId');
-        const list = lists.find(list => list.userId == userId)
+document.querySelector('#filters-button input').addEventListener('change', (event) => {
+    const checkbox = event.target;
+    if(checkbox.checked) {
+        document.getElementById('filters').style.height = '3rem'
+    } else {
+        document.getElementById('filters').style.height = '0rem'
+    }
+})
 
-        const listId = list.id
-        const recipeId = checkbox.id;
+document.getElementById('category').addEventListener('change', async (event) => {
+    const categoryId = event.target.value;
 
-        if (checkbox.checked) {
-            checkbox.style.background = 'url(../ASSETS/inList.png) center/contain no-repeat';
+    const difficulty = document.getElementById('difficulty')
+    const difficultyId = parseInt(difficulty.value);
 
-            const recipesListData = {
-                recipeId,
-                listId
-            };
+    let response;
+    if(difficulty.value === '0') {
+        response = await fetch(`/api/recipes/category/${categoryId}`)
+    } else {
+        response = await fetch(`/api/recipes/${difficultyId}/${categoryId}`)
+    }
 
-            const response = await fetch('/api/recipesList', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(recipesListData)
-            });
+    let recipes = await response.json();
 
-            if (!response.ok) {
-                alert("Failed to add the recipe to your list");
-                checkbox.checked = false;  // revert to unchecked if error
-                checkbox.style.background = 'url(../ASSETS/notInList.png) center/contain no-repeat';
-            }
+    const recipesContainer = document.getElementById('recipes');
+    recipesContainer.innerHTML = ''; 
+
+    const userId = localStorage.getItem('userId')
+
+    const recipesListResponse = await fetch('/api/recipesList');
+    const recipesList = await recipesListResponse.json()
+    const listsResponse = await fetch('/api/lists');
+    const lists = await listsResponse.json()
+    const list = lists.find(list => list.UserId == userId)
+    const recipeIdsInList = recipesList
+        .filter(recipeList => recipeList.ListId == list.Id)
+        .map(recipeList => recipeList.RecipeId)
+    recipes = recipes.filter(recipe => recipeIdsInList.includes(recipe.Id))
+
+    recipes.forEach(recipe => {
+        const link = document.createElement('a')
+        const image = document.createElement('img')
+        const info = document.createElement('div')
+        link.href = `/recipe.html/${recipe.Id}`
+        link.className = 'recipe'
+        info.innerHTML = `<h3>${recipe.Name}</h3> <input type='checkbox' id='${recipe.Id}' class='list-input'>`
+        if(recipe.image != '') {
+            image.src = recipe.Image
         } else {
-            checkbox.style.background = 'url(../ASSETS/notInList.png) center/contain no-repeat';
-            
-            const recipeList = recipesList.find(recipeList => recipeList.recipeId == recipeId && recipeList.listId == listId) 
-
-            const recipesListId = recipeList.id
-
-            const response = await fetch(`/api/recipesList/${recipesListId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            });
-
-            if (!response.ok) {
-                alert("Failed to delete the recipe from your list");
-                checkbox.checked = true;  // revert to checked if error
-                checkbox.style.background = 'url(../ASSETS/inList.png) center/contain no-repeat';
-            } else {
-                window.location.reload()
-            }
+            image.src = '../ASSETS/recipe.png'
         }
-    } catch (error) {
-        console.error('An error occurred:', error);
-    }
-}
+        link.appendChild(image)
+        link.appendChild(info)
+        recipesContainer.appendChild(link)
+    })
+})
 
-// Initialize recipes and check the list, then register events
-fetchRecipes().then(() => {
-    checkRecipesList().then(() => {
-        document.querySelectorAll('a input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', () => addToList(checkbox));
-        });
-    });
-});
+document.getElementById('difficulty').addEventListener('change', async (event) => {
+    const difficultyId = event.target.value;
+
+    const category = document.getElementById('category')
+    const categoryId = parseInt(category.value);
+
+    let response;
+    if(category.value === '0') {
+        response = await fetch(`/api/recipes/difficulty/${difficultyId}`)
+    } else {
+        response = await fetch(`/api/recipes/${difficultyId}/${categoryId}`)
+    }
+
+    let recipes = await response.json();
+
+    const recipesContainer = document.getElementById('recipes');
+    recipesContainer.innerHTML = ''; 
+
+    const userId = localStorage.getItem('userId')
+
+    const recipesListResponse = await fetch('/api/recipesList');
+    const recipesList = await recipesListResponse.json()
+    const listsResponse = await fetch('/api/lists');
+    const lists = await listsResponse.json()
+    const list = lists.find(list => list.UserId == userId)
+    const recipeIdsInList = recipesList
+        .filter(recipeList => recipeList.ListId == list.Id)
+        .map(recipeList => recipeList.RecipeId)
+    recipes = recipes.filter(recipe => recipeIdsInList.includes(recipe.Id))
+
+    recipes.forEach(recipe => {
+        const link = document.createElement('a')
+        const image = document.createElement('img')
+        const info = document.createElement('div')
+        link.href = `/recipe.html/${recipe.Id}`
+        link.className = 'recipe'
+        info.innerHTML = `<h3>${recipe.Name}</h3> <input type='checkbox' id='${recipe.Id}' class='list-input'>`
+        if(recipe.image != '') {
+            image.src = recipe.Image
+        } else {
+            image.src = '../ASSETS/recipe.png'
+        }
+        link.appendChild(image)
+        link.appendChild(info)
+        recipesContainer.appendChild(link)
+    })
+})
+
+
+fetchUserData()
+createRecipesCard()

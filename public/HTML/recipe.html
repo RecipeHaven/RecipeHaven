@@ -11,9 +11,9 @@
     <link rel="stylesheet" href="../CSS/header.css">
     <link rel="stylesheet" href="../CSS/recipe.css">
 </head>
-<body onload="fetchUser(), fetchComments()">
+<body onload="fetchUserData(), fetchComments()">
     <header>
-        <a href="/" class="logo" draggable="false">Cook Pad</a>
+        <a href="/" class="logo" draggable="false"></a>
         <nav>
           <ul>
             <li><a href="/">Home</a></li>
@@ -48,7 +48,7 @@
         <section id="reviews">
             <h1>Comments</h1>
             <form onsubmit="event.preventDefault(), addComment()">
-                <textarea></textarea>
+                <textarea placeholder="Give me your review..."></textarea>
                 <button type="submit">Comment</button>
             </form>
             <article></article>

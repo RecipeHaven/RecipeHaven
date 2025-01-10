@@ -10,9 +10,10 @@ body{
 }
 
 :root{
-    --primary: #fcf5e5;
+    --primary: #f5f2db;
     --primary2: #fcf5e5c4;
-    --secondary: #fe7261;
+    --secondary: #405c51;
+    --link: #2ca776;
     --text: #3b3b3b;
     --white: #fff;
 }

@@ -4,13 +4,13 @@ async function fetchUserData() {
 
         const usersResponse = await fetch('/api/users')
         let users = await usersResponse.json()
-        let user = users.find(user => user.id == userId)
+        let user = users.find(user => user.Id == userId)
 
         const profile = document.getElementById('profile')
 
         if(userId != null) {
-            profile.innerHTML = `<img src='ASSETS/profile.png' alt='Profile Photo' draggable='false'><span>${user.name}</span>`
-            profile.href = '/user.html'
+            profile.innerHTML = `<img src='ASSETS/profile.png' alt='Profile Photo' draggable='false'><span>${user.Name}</span>`
+            profile.href = `/user.html/${userId}`
         } else {
             profile.innerHTML = `<img src='ASSETS/profile.png' alt='Profile Photo' draggable='false'><span>Signin</span>`
             profile.href = '/signin.html'
@@ -34,7 +34,7 @@ async function addRecipe() {
                             .join(', ')
 
     const imageFile = document.getElementById('file-input').files[0]
-    const image = document.getElementById('file-input').files[0]?.name
+    // const image = document.getElementById('file-input').files[0]?.name
 
     // Se a imagem não for selecionada, não tenta fazer o upload
     let correctedImageUrl = ''

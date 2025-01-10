@@ -1,18 +1,18 @@
-async function fetchUser() {
+async function fetchUserData() {
     try {
         const userId = localStorage.getItem('userId')
 
         const usersResponse = await fetch('/api/users')
         let users = await usersResponse.json()
-        let user = users.find(user => user.id == userId)
+        let user = users.find(user => user.Id == userId)
 
         const profile = document.getElementById('profile')
 
         if(userId != null) {
-            profile.innerHTML = `<img src='../ASSETS/profile.png' alt='Profile Photo' draggable='false'><span>${user.name}</span>`
-            profile.href = '/user.html'
+            profile.innerHTML = `<img src='../ASSETS/profile.png' alt='Profile Photo' draggable='false'><span>${user.Name}</span>`
+            profile.href = `/user.html/${userId}`
         } else {
-            profile.innerHTML = `<img src='../ASSETS/profile.png' alt='Profile Photo' draggable='false'><span>Signin</span>`
+            profile.innerHTML = `<img src='ASSETS/profile.png' alt='Profile Photo' draggable='false'><span>Signin</span>`
             profile.href = '/signin.html'
         }
     } catch (error) {
@@ -22,44 +22,54 @@ async function fetchUser() {
 
 async function fetchRecipeData() {
     try {
-        const response = await fetch('/api/recipes')
-        const recipes = await response.json()
+        let usersResponse = await fetch(`/api/users`)
+        const users = await usersResponse.json()
+
+        const userId = localStorage.getItem('userId')
 
         const path = window.location.pathname;
         const pathSegments = path.split('/');
-        const recipeId = pathSegments[pathSegments.length - 1]
+        const recipeId = parseInt(pathSegments[pathSegments.length - 1])
 
-        let recipe = recipes.find(recipe => recipe.id == recipeId)
-        document.title = `Fat - ${recipe.name}`
-        // console.log(recipe)
+        let response = await fetch(`/api/recipes/${recipeId}`)
+        const recipe = await response.json()
 
-        document.querySelector('#recipe-info h1').innerHTML = `${recipe.name}<input type='checkbox' id='${recipe.id}'>`
-        if (recipe.difficultyId == 1) {
+        document.title = `Recipe Haven - ${recipe.Name}`
+
+        let userHasPermission = users.some(user => user.Permissions === 0 && user.Id == userId);
+
+        if(recipe.UserId == userId || userHasPermission) {
+            document.querySelector('#recipe-info h1').innerHTML = `${recipe.Name}<div><input type='checkbox' id='${recipe.Id}'><button onclick="deleteRecipe(${recipe.Id});"></button></div>`
+        } else {
+            document.querySelector('#recipe-info h1').innerHTML = `${recipe.Name}<div><input type='checkbox' id='${recipe.Id}'></div>`
+        }
+
+        if (recipe.DifficultyId == 1) {
             document.querySelector('#difficulty img').src = '../ASSETS/easy.png'
             document.querySelector('#difficulty p').textContent = 'Easy'
-        } else if (recipe.difficultyId == 2) {
+        } else if (recipe.DifficultyId == 2) {
             document.querySelector('#difficulty img').src = '../ASSETS/medium.png'
             document.querySelector('#difficulty p').textContent = 'Medium'
-        } else if (recipe.difficultyId == 3 || recipe.difficultyId == 4) {
+        } else if (recipe.DifficultyId == 3 || recipe.DifficultyId == 4) {
             document.querySelector('#difficulty img').src = '../ASSETS/hard.png'
             document.querySelector('#difficulty p').textContent = 'Hard'
         }
-        document.getElementById('description').textContent = recipe.description
-        document.getElementById('time').innerHTML = `<img src="../ASSETS/clock.png" alt="Clock" draggable="false"> ${recipe.time}min`
-        document.getElementById('cost').innerHTML = `<img src="../ASSETS/money-bag.png" alt="Money Bag" draggable="false">${recipe.cost}€`
-        if(recipe.categoryId == 1) {
+        document.getElementById('description').textContent = recipe.Description
+        document.getElementById('time').innerHTML = `<img src="../ASSETS/clock.png" alt="Clock" draggable="false"> ${recipe.Time}min`
+        document.getElementById('cost').innerHTML = `<img src="../ASSETS/money-bag.png" alt="Money Bag" draggable="false">${recipe.Cost}€`
+        if(recipe.CategoryId == 1) {
             document.querySelector('#category img').src = '../ASSETS/meal.png'
-        } else if(recipe.categoryId == 2) {
+        } else if(recipe.CategoryId == 2) {
             document.querySelector('#category img').src = '../ASSETS/dessert.png'
-        } else if(recipe.categoryId == 3) {
+        } else if(recipe.CategoryId == 3) {
             document.querySelector('#category img').src = '../ASSETS/drink.png'
-        } else if(recipe.categoryId == 4) {
+        } else if(recipe.CategoryId == 4) {
             document.querySelector('#category img').src = '../ASSETS/cocktail.png'
-        } else if(recipe.categoryId == 5) {
+        } else if(recipe.CategoryId == 5) {
             document.querySelector('#category img').src = '../ASSETS/soup.png'
         }
 
-        let ingredients = (recipe.ingredients).split(',').map(ingredient => ingredient.trim())
+        let ingredients = (recipe.Ingredients).split(',').map(ingredient => ingredient.trim())
         ingredients.forEach(ingredient => {
             ingredient = ingredient.charAt(0).toUpperCase() + ingredient.slice(1)
             let ingredientElement = document.createElement('p')
@@ -70,10 +80,6 @@ async function fetchRecipeData() {
         console.error('Error fetching recipes:', error)
     }
 }
-
-// function openSection() {
-//     document.querySelector('#recipe-info article').style.height = 'calc(100lvh - 6rem)'
-// }
 
 async function fetchComments() {
     const reviewsResponse = await fetch('/api/reviews')
@@ -87,24 +93,27 @@ async function fetchComments() {
     const pathSegments = path.split('/')
     const recipeId = pathSegments[pathSegments.length - 1]
 
-    reviews = reviews.filter(review => review.recipeId == recipeId)
+    reviews = reviews.filter(review => review.RecipeId == recipeId)
     reviews.forEach(review => {
         let reviewContainer = document.createElement('div')
         let reviewUser = document.createElement('a')
         reviewUser.className = 'username'
-        const user = users.find(user => user.id == review.userId)
-        reviewUser.href = `/user2.html/${user.id}`
-        reviewUser.textContent = user.name
+        const user = users.find(user => user.Id == review.UserId)
+        reviewUser.href = `/user.html/${user.Id}`
+        reviewUser.textContent = user.Name
         let reviewElement = document.createElement('p')
         reviewElement.className = 'review'
-        reviewElement.textContent = review.review
+        reviewElement.textContent = review.Review
         reviewContainer.appendChild(reviewUser)
         reviewContainer.appendChild(reviewElement)
-        if(userId == review.userId) {
+
+        let userHasPermission = users.some(user => user.Permissions === 0 && user.Id == userId);
+
+        if(userId == review.UserId || userHasPermission) {
             let reviewDelete = document.createElement('button')
             reviewDelete.className = 'delete'
             reviewDelete.addEventListener('click', () => {
-                deleteReview(review.id)
+                deleteReview(review.Id)
             })
 
             reviewContainer.appendChild(reviewDelete)
@@ -172,7 +181,7 @@ async function checkRecipesList() {
         const lists = await listsResponse.json();
 
         const userId = localStorage.getItem('userId');
-        const list = lists.find(list => list.userId == userId);
+        const list = lists.find(list => list.UserId == userId);
 
         const recipeIdsInList = recipesList
             .filter(recipeList => recipeList.listId == list.id)
@@ -202,7 +211,7 @@ async function addToList(checkbox) {
         const lists = await listsResponse.json()
 
         const userId = localStorage.getItem('userId');
-        const list = lists.find(list => list.userId == userId)
+        const list = lists.find(list => list.UserId == userId)
 
         const listId = list.id
         const recipeId = checkbox.id;
@@ -246,10 +255,31 @@ async function addToList(checkbox) {
                 alert("Failed to delete the recipe from your list");
                 checkbox.checked = true;  // revert to checked if error
                 checkbox.style.background = 'url(../ASSETS/inList.png) center/contain no-repeat';
+            } else {
+                window.location.reload()
             }
         }
     } catch (error) {
         console.error('An error occurred:', error);
+    }
+}
+
+async function deleteRecipe(recipeId) {
+    try {
+        const response = await fetch(`/api/recipes/${recipeId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        if (!response.ok) {
+            alert("Failed to delete the recipe");
+        } else {
+            window.location.href = "/recipes.html"
+        }
+    } catch (error) {
+        console.log('An error occurred')
     }
 }
 

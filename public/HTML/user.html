@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fat - User</title>
+    <title></title>
     <link rel="icon" href="../ASSETS/favicon.ico">
 
     <!-- Style -->
@@ -11,9 +11,9 @@
     <link rel="stylesheet" href="../CSS/header.css">
     <link rel="stylesheet" href="../CSS/user.css">
 </head>
-<body onload="fetchUserData(), fetchRecipes()">
+<body>
     <header>
-      <a href="/" class="logo" draggable="false">Cook Pad</a>
+      <a href="/" class="logo" draggable="false"></a>
         <nav>
           <ul>
             <li><a href="/">Home</a></li>
@@ -23,6 +23,7 @@
             <li><a href="/forum.html">Forum</a></li>
           </ul>
         </nav>
+        <a href="/signin.html" id="profile" draggable="false"></a>
     </header>
     <section>
         <article id="profile-info">
@@ -30,7 +31,6 @@
             <div>
                 <h1></h1>
                 <p></p>
-                <a href="/logout" onclick="logout()">Logout</a>
             </div>
         </article>
         <article id="recipes"></article>
@@ -38,6 +38,6 @@
     <footer></footer>
 
     <!-- Script -->
-     <script src="../JS/user.js"></script>
+     <script type="module" src="../JS/user.js"></script>
 </body>
 </html>

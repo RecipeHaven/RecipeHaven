@@ -2,6 +2,7 @@ header{
     position: relative;
     height: 4rem;
     padding: 0rem 12rem;
+    background-color: var(--primary);
     box-shadow: 0px 0px 5px var(--text);
     display: flex;
     align-items: center;
@@ -11,26 +12,37 @@ header{
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
 .logo{
-    color: var(--secondary);
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.8em;
-    font-weight: bold;
-    text-decoration: none;
+    width: 4rem;
+    height: 100%;
+    background: url(../ASSETS/logo2.png) center/cover no-repeat;
+}
+
+header nav {
+    height: 100%;
 }
 
 header nav ul{
+    height: 100%;
     list-style: none;
     display: flex;
     gap: 1.5rem;
 }
 
+header nav ul li{
+    height: 100%;
+}
+
 header nav ul a{
+    height: 100%;
     color: var(--text);
     text-decoration: none;
+    display: flex;
+    align-items: center;
 }
 
 header nav ul a:hover{
-    color: var(--secondary);
+    height: calc(100% - .25rem);
+    border-bottom: .25rem solid var(--secondary);
 }
 
 #profile{
@@ -42,8 +54,8 @@ header nav ul a:hover{
     color: var(--text);
     text-decoration: none;
     background-color: var(--white);
-    border-top-left-radius: 15px;
-    border-bottom-left-radius: 15px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
     display: flex;
     gap: .5rem;
     align-items: center;

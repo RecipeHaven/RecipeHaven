@@ -1,0 +1,126 @@
+section{
+    padding: 1.5rem 12rem;
+    display: flex;
+    gap: 2rem;
+    flex-direction: column;
+}
+
+form{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+
+    :after{
+        content: '';
+        position: absolute;
+        left: 10rem;
+        bottom: -2rem;
+        width: calc(100% - 20rem);
+        height: .5rem;
+        background-color: var(--secondary);
+        border-radius: 250px;
+    }
+}
+
+form textarea{
+    width: calc(100% - 20rem);
+    min-height: 5rem;
+    padding: 1rem;
+    color: var(--text);
+    outline: none;
+    resize: none;
+    border: none;
+    border-radius: 10px;
+    box-shadow: inset 4.5px 4.5px 4.5px #bebebe,
+            inset -4.5px -4.5px 4.6px #ffffff;
+}
+
+form button{
+    padding: 1rem;
+    margin-right: 9rem;
+    color: var(--primary);
+    font-weight: bold;
+    letter-spacing: .15rem;
+    background-color: var(--secondary);
+    border: none;
+    border-radius: 10px;
+    align-self: flex-end;
+    cursor: pointer;
+}
+
+#posts{
+    width: calc(100% - 20rem);
+    margin-top: 2rem;
+    margin-left: 10rem;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: .5rem;
+}
+
+.post-content{
+    width: fit-content;
+    min-width: 10rem;
+    max-width: 25rem;
+    padding: .5rem;
+    color: var(--primary);
+    background-color: var(--secondary); 
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+
+    a{
+        color: var(--primary);
+        text-decoration: none;
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+    
+    span{
+        font-size: .7em;
+        align-self: end;
+    }
+}
+
+.recipe{
+    color: var(--text);
+    padding: 1rem;
+    text-decoration: none;
+    background-color: var(--primary);
+    box-shadow: 0px 0px 8px var(--text);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.recipe img{
+    width: 100%;
+    height: 13.5rem;
+    border-radius: 10px;
+}
+
+.recipe div{
+    padding: 0rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.recipe h3{
+    color: var(--text);
+}
+
+.recipe:hover h3{
+    color: var(--link);
+}
+
+.recipe input{
+    appearance: none;
+    padding: 1rem;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}

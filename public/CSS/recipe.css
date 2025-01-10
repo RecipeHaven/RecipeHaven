@@ -34,9 +34,22 @@ main{
     justify-content: space-between;
 }
 
+#recipe-info h1 div{
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+#recipe-info h1 button{
+    padding: 1rem;
+    background: url(../ASSETS/trash.png) center/cover no-repeat;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    z-index: 999;
+}
+
 #recipe-info h1 input{
     appearance: none;
-    margin-top: .25rem;
     padding: 1rem;
     background-color: transparent;
     border: none;

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fat - Home</title>
+    <title>Recipe Haven - Home</title>
     <link rel="icon" href="ASSETS/favicon.ico">
 
     <!-- Style -->
@@ -11,9 +11,9 @@
     <link rel="stylesheet" href="CSS/header.css">
     <link rel="stylesheet" href="CSS/home.css">
 </head>
-<body onload="fetchRecipes()">
-    <header>
-        <a href="/" class="logo" draggable="false">Cook Pad</a>
+<body>
+    <header onload="checkUser()">
+        <a href="/" class="logo" draggable="false"></a>
         <nav>
           <ul>
             <li><a href="/">Home</a></li>
@@ -29,7 +29,6 @@
         <section>
           <article id="mainArticle">
             <img src="ASSETS/logo.png" alt="Logo" draggable="false">
-            <!-- <h1>Fat Food</h1> -->
           </article>
           <article id="recipes"></article>
         </section>
@@ -37,6 +36,6 @@
     <footer></footer>
 
     <!-- Script -->
-     <script src="JS/home.js"></script>
+    <script type="module" src="JS/home.js"></script>
 </body>
 </html>

@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
-    <link rel="icon" href="../ASSETS/favicon.ico">
+    <title>Recipe Haven - Forum</title>
+    <link rel="icon" href="ASSETS/favicon.ico">
 
     <!-- Style -->
     <link rel="stylesheet" href="../CSS/style.css">
     <link rel="stylesheet" href="../CSS/header.css">
-    <link rel="stylesheet" href="../CSS/user.css">
+    <link rel="stylesheet" href="../CSS/forum.css">
 </head>
-<body onload="fetchUserData(), fetchRecipes()">
+<body onload="checkUser()">
     <header>
-      <a href="/" class="logo" draggable="false">Cook Pad</a>
+        <a href="/" class="logo" draggable="false"></a>
         <nav>
           <ul>
             <li><a href="/">Home</a></li>
@@ -25,19 +25,19 @@
         </nav>
         <a href="/signin.html" id="profile" draggable="false"></a>
     </header>
-    <section>
-        <article id="profile-info">
-            <img src="../ASSETS/profile.png" alt="Profile photo">
-            <div>
-                <h1></h1>
-                <p></p>
-            </div>
-        </article>
-        <article id="recipes"></article>
-    </section>
+    <main>
+        <section>
+          <form onsubmit="event.preventDefault(); addPost();" >
+            <textarea name="post" id="post" placeholder="Write a new post here..."></textarea>
+            <button type="submit">Post</button>  
+          </form>
+          <article id="posts">
+          </article>
+        </section>
+    </main>
     <footer></footer>
 
     <!-- Script -->
-     <script src="../JS/user2.js"></script>
+    <script src="../JS/forum.js"></script>
 </body>
 </html>

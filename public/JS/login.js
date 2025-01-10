@@ -21,8 +21,8 @@ async function login() {
         if(response.ok) {
             const usersResponse = await fetch('/api/users')
             let users = await usersResponse.json()
-            let user = users.find(user => user.name == name)
-            let userId = user.id
+            let user = users.find(user => user.Name == name)
+            let userId = user.Id
 
             const listData = {
                 userId
@@ -38,7 +38,7 @@ async function login() {
                 }) 
 
                 if(response.ok) {
-                    localStorage.setItem('userId', user.id)
+                    localStorage.setItem('userId', user.Id)
                     window.location.replace('/')
                 }
             } catch (error) {

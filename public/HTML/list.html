@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fat - List</title>
+    <title>Recipe Haven - List</title>
     <link rel="icon" href="../ASSETS/favicon.ico">
 
     <!-- Style -->
@@ -11,9 +11,9 @@
     <link rel="stylesheet" href="../CSS/header.css">
     <link rel="stylesheet" href="../CSS/recipes.css">
 </head>
-<body onload="fetchRecipes()">
+<body>
     <header>
-        <a href="/" class="logo" draggable="false">Cook Pad</a>
+        <a href="/" class="logo" draggable="false"></a>
         <nav>
           <ul>
             <li><a href="/">Home</a></li>
@@ -28,21 +28,21 @@
     <section>
         <div id="search-container">
             <input type="search" placeholder="Search..." id="search">
-            <button onclick="applyFilters()">Search</button>
+            <button id="search-button">Search</button>
         </div>
         <div id="filters-button">
-            <input type="checkbox" onchange="openFilters(this)" #filtersCheckbox>
+            <input type="checkbox">
             <!-- <span>Filters</span> -->
         </div>
         <article id="filters">
-            <select id="category" onchange="applyFilters()">
+            <select id="category">
                 <option value="0" selected disabled>Category</option>
                 <option value="1">Meal</option>
                 <option value="2">Dessert</option>
                 <option value="3">Drink</option>
             </select>
     
-            <select id="difficulty" onchange="applyFilters()">
+            <select id="difficulty">
                 <option value="0" selected disabled>Difficulty</option>
                 <option value="1">Easy</option>
                 <option value="2">Medium</option>
@@ -50,13 +50,13 @@
                 <option value="4">Extreme</option>
             </select>
     
-            <button type="reset" onclick="resetFilters()"></button>
+            <button type="reset"></button>
         </article>
         <article id="recipes"></article>
     </section>
     <footer></footer>
 
     <!-- Script -->
-    <script src="../JS/list.js"></script>
+    <script type="module" src="../JS/list.js"></script>
 </body>
 </html>
