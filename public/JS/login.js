@@ -1,3 +1,6 @@
+
+
+
 async function login() {
     let name = document.getElementById('name').value
     let email = document.getElementById('email').value
@@ -38,8 +41,7 @@ async function login() {
                 }) 
 
                 if(response.ok) {
-                    localStorage.setItem('userId', user.Id)
-                    window.location.replace('/')
+                    window.location.replace('/login.html')
                 }
             } catch (error) {
                 console.log('An error occurred')

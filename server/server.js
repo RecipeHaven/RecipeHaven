@@ -6,13 +6,14 @@ const routes = require('./routes') // Importa as rotas
 const app = express()
 const PORT = 3000
 
-// Serve arquivos estáticos da pasta 'public'
+app.use(express.json());
+
 app.use(session({
-    secret: 'password', // Usa uma chave secreta para assinar o ID da sessão
+    secret: 'bda024bf-1d47-470d-9fd1-363444a77d3b',  // Um segredo para assinar o cookie da sessão
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false } // Define como `true` se usares HTTPS em produção
-}))
+    cookie: { secure: false } // Define como 'true' se estiveres a usar HTTPS
+}));
 
 app.use(express.static(path.join(__dirname, '../public')))
 

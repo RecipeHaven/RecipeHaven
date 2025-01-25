@@ -289,16 +289,6 @@ router.delete('/api/recipesList/:id', express.json(), async (req, res) => {
     }
 });
 
-router.get('/logout', (req, res) => {
-    req.session.destroy(err => {
-        if (err) {
-            console.error('Error destroying session:', err)
-            return res.status(500).send('Error logging out')
-        }
-        res.redirect('/') // Redireciona para a página home após o logout
-    })
-})
-
 router.post('/api/recipe', express.json(), async (req, res) => {
     const { name, image, ingredients, description, difficultyId, time, cost, userId, categoryId } = req.body;
 
@@ -330,6 +320,33 @@ router.post('/api/forum', express.json(), async (req, res) => {
     } catch (error) {
         console.error('Erro ao adicionar Post:', error);
         res.status(500).json({ error: 'Erro ao adicionar Post.' });
+    }
+});
+
+router.post('/api/login', (req, res) => {
+    const { userId } = req.body;
+    req.session.userId = userId;  // Armazenar o ID do utilizador na sessão
+    res.send({ message: 'Sessão iniciada com sucesso!' });
+});
+
+router.get('/api/logout', (req, res) => {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Error destroying session:', err);
+        return res.status(500).send('Error logging out');
+      }
+      // Após destruir a sessão, redireciona para a página inicial
+      res.clearCookie('connect.sid');  // Limpa o cookie de sessão
+      res.redirect('/');
+    });
+});
+
+router.get('/api/user', (req, res) => {
+    if (req.session.userId) {
+        // Podes fazer algo com o ID do utilizador aqui
+        res.send({ userId: req.session.userId });
+    } else {
+        res.status(401).send({ message: 'Não autenticado' });
     }
 });
 

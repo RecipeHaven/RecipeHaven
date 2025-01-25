@@ -1,64 +1,75 @@
 export async function fetchUserData() {
     try {
-        const userId = localStorage.getItem('userId')
+        // Faz o fetch do userId a partir da sessão no servidor
+        const sessionResponse = await fetch('/api/user');
+        if (!sessionResponse.ok) {
+            console.log('Utilizador não autenticado');
+            redirectToSignin();
+            return;
+        }
 
-        const usersResponse = await fetch('/api/users')
-        let users = await usersResponse.json()
-        let user = users.find(user => user.Id == userId)
+        const sessionData = await sessionResponse.json();
+        const userId = sessionData.userId;
 
-        const profile = document.getElementById('profile')
+        // Busca todos os utilizadores
+        const usersResponse = await fetch('/api/users');
+        let users = await usersResponse.json();
+        let user = users.find(user => user.Id == userId);
 
-        if(window.location.pathname.includes('/user.html')) {
+        const profile = document.getElementById('profile');
+
+        if (window.location.pathname.includes('/user.html')) {
             const path = window.location.pathname;
             const pathSegments = path.split('/');
-            const userId = pathSegments[pathSegments.length - 1]
+            const currentUserId = pathSegments[pathSegments.length - 1];
 
-            const user2Id = localStorage.getItem('userId')
+            const currentUser = users.find(user => user.Id == currentUserId);
+            const loggedInUser = users.find(user => user.Id == userId);
 
-            const usersResponse = await fetch('/api/users')
-            let users = await usersResponse.json()
-            let currentUser = users.find(user => user.Id == userId)
-            let user2 = users.find(user => user.Id == user2Id)
+            document.title = `Recipe Haven - ${currentUser?.Name || 'User'}`;
 
-            document.title = `Recipe Haven - ${currentUser.Name}`
-            
-            const name = document.querySelector('#profile-info div h1')
-            const email = document.querySelector('#profile-info div p')
+            const name = document.querySelector('#profile-info div h1');
+            const email = document.querySelector('#profile-info div p');
 
-            if(userId == user2Id) {
-                const logout = document.createElement('a')
-                logout.textContent = 'Logout'
-                logout.href = '/logout'
-                document.querySelector('#profile-info div').appendChild(logout)
+            if (currentUserId == userId) {
+                const logout = document.createElement('a');
+                logout.textContent = 'Logout';
+                logout.href = '/api/logout';
+                document.querySelector('#profile-info div').appendChild(logout);
 
-                document.querySelector('#profile-info div a').addEventListener('click', () => {
-                    localStorage.removeItem('userId')
-                })
+                document.querySelector('#profile-info div a').addEventListener('click', async () => {
+                    await fetch('/api/logout', { method: 'POST' });
+                    redirectToSignin();
+                });
             }
 
-            if(currentUser != null){
-                name.textContent =  currentUser.Name
-                email.textContent =  currentUser.Email
+            if (currentUser != null) {
+                name.textContent = currentUser.Name;
+                email.textContent = currentUser.Email;
             }
 
-            if(user2Id != null) {
-                profile.innerHTML = `<img src='../ASSETS/profile.png' alt='Profile Photo' draggable='false'><span>${user2.Name}</span>`
-                profile.href = `/user.html/${user2.Id}`
+            if (userId != null) {
+                profile.innerHTML = `<img src='../ASSETS/profile.png' alt='Profile Photo' draggable='false'><span>${loggedInUser.Name}</span>`;
+                profile.href = `/user.html/${userId}`;
             } else {
-                profile.innerHTML = `<img src='../ASSETS/profile.png' alt='Profile Photo' draggable='false'><span>Signin</span>`
-                profile.href = '/signin.html'
+                profile.innerHTML = `<img src='../ASSETS/profile.png' alt='Profile Photo' draggable='false'><span>Signin</span>`;
+                profile.href = '/signin.html';
             }
-        }
-        else {
-            if(userId != null) {
-                profile.innerHTML = `<img src='ASSETS/profile.png' alt='Profile Photo' draggable='false'><span>${user.Name}</span>`
-                profile.href = `/user.html/${userId}`
+        } else {
+            if (userId != null) {
+                profile.innerHTML = `<img src='ASSETS/profile.png' alt='Profile Photo' draggable='false'><span>${user.Name}</span>`;
+                profile.href = `/user.html/${userId}`;
             } else {
-                profile.innerHTML = `<img src='ASSETS/profile.png' alt='Profile Photo' draggable='false'><span>Signin</span>`
-                profile.href = '/signin.html'
+                profile.innerHTML = `<img src='ASSETS/profile.png' alt='Profile Photo' draggable='false'><span>Signin</span>`;
+                profile.href = '/signin.html';
             }
         }
     } catch (error) {
-        console.error('Error fetching user data:', error)
+        console.error('Error fetching user data:', error);
+        redirectToSignin();
     }
+}
+
+function redirectToSignin() {
+    window.location.replace('/signin.html');
 }
