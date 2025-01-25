@@ -4,7 +4,7 @@ const db = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: 'root',
-    database: 'fat'
+    database: 'recipe_haven'
 });
 
 async function getRecipes() {
@@ -66,13 +66,13 @@ async function getUserById(id) {
 }
 
 async function getLists() {
-    const query = 'SELECT * FROM list';
+    const query = 'SELECT * FROM lists';
     const [rows] = await db.execute(query);
     return rows;
 }
 
 async function getRecipesList() {
-    const query = 'SELECT * FROM recipes_list';
+    const query = 'SELECT * FROM recipes_lists';
     const [rows] = await db.execute(query);
     return rows;
 }
@@ -106,7 +106,7 @@ async function addlist(listData) {
         const { userId } = listData;
 
         // Cria a query SQL para inserir uma nova receita
-        const query = `INSERT INTO list (UserId) VALUES (?)`;
+        const query = `INSERT INTO lists (UserId) VALUES (?)`;
 
         // Executa a query de forma assíncrona com os valores passados
         const [results] = await db.query(query, [userId]);
@@ -124,7 +124,7 @@ async function addRecipesList(recipesListData) {
         const { recipeId, listId } = recipesListData;
 
         // Cria a query SQL para inserir uma nova receita
-        const query = `INSERT INTO recipes_list (RecipeId, ListId) VALUES (?, ?)`;
+        const query = `INSERT INTO recipes_lists (RecipeId, ListId) VALUES (?, ?)`;
 
         // Executa a query de forma assíncrona com os valores passados
         const [results] = await db.query(query, [recipeId, listId]);
@@ -192,7 +192,7 @@ async function addUser(userData) {
 }
 
 async function deleteRecipesListById(id) {
-    const query = `DELETE FROM recipes_list WHERE Id = ?`;
+    const query = `DELETE FROM recipes_lists WHERE Id = ?`;
     return db.query(query, [id]);
 }
 
