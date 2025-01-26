@@ -10,25 +10,7 @@ document.getElementById('search-button').addEventListener('click', async () => {
         let response = await fetch(`/api/recipesByName/${search}`)
         const recipes = await response.json()
 
-        const recipesContainer = document.getElementById('recipes');
-        recipesContainer.innerHTML = ''; 
-        
-        recipes.forEach(recipe => {
-            const link = document.createElement('a')
-            const image = document.createElement('img')
-            const info = document.createElement('div')
-            link.href = `/recipe.html/${recipe.Id}`
-            link.className = 'recipe'
-            info.innerHTML = `<h3>${recipe.Name}</h3> <input type='checkbox' id='${recipe.Id}' class='list-input'>`
-            if(recipe.image != '') {
-                image.src = recipe.Image
-            } else {
-                image.src = '../ASSETS/recipe.png'
-            }
-            link.appendChild(image)
-            link.appendChild(info)
-            recipesContainer.appendChild(link)
-        })
+        createRecipesCard(recipes)
     }
 })
 
@@ -119,5 +101,8 @@ document.getElementById('difficulty').addEventListener('change', async (event) =
     })
 })
 
+const response = await fetch('/api/recipes')
+let recipes = await response.json()
+
 fetchUserData();
-createRecipesCard();
+createRecipesCard(recipes);

@@ -1,12 +1,11 @@
-export async function createRecipesCard() {
+export async function createRecipesCard(recipes) {
     try {
-        const response = await fetch('/api/recipes')
-        let recipes = await response.json()
-
         const recipesContainer = document.getElementById('recipes');
         recipesContainer.innerHTML = ''; 
 
-        const userId = localStorage.getItem('userId');
+        const sessionResponse = await fetch('/api/user');
+        const sessionData = await sessionResponse.json();
+        const userId = sessionData.userId;
 
         if(window.location.pathname == '/' ) {
             recipes = recipes.sort(() => Math.random() - 0.5);
@@ -68,7 +67,10 @@ async function addToList(checkbox) {
         const recipesList = await recipesListresponse.json()
         const lists = await listsResponse.json()
 
-        const userId = localStorage.getItem('userId');
+        const sessionResponse = await fetch('/api/user');
+        const sessionData = await sessionResponse.json();
+        const userId = sessionData.userId;
+        
         const list = lists.find(list => list.UserId == userId)
 
         const listId = list.Id
@@ -100,9 +102,7 @@ async function addToList(checkbox) {
             
             const recipeList = recipesList.find(recipeList => recipeList.RecipeId == recipeId && recipeList.ListId == listId) 
 
-            const recipesListId = recipeList.Id
-
-            const response = await fetch(`/api/recipesList/${recipesListId}`, {
+            const response = await fetch(`/api/recipesList/${recipeList.Id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
@@ -130,7 +130,10 @@ async function checkRecipesList() {
         const listsResponse = await fetch('/api/lists');
         const lists = await listsResponse.json();
 
-        const userId = localStorage.getItem('userId');
+        const sessionResponse = await fetch('/api/user');
+        const sessionData = await sessionResponse.json();
+        const userId = sessionData.userId;
+
         const list = lists.find(list => list.UserId == userId);
 
         const recipeIdsInList = recipesList

@@ -1,6 +1,8 @@
 async function checkUser() {
     try {
-        const userId = localStorage.getItem('userId')
+        const sessionResponse = await fetch('/api/user');
+        const sessionData = await sessionResponse.json();
+        const userId = sessionData.userId;
 
         const usersResponse = await fetch('/api/users')
         let users = await usersResponse.json()
@@ -28,7 +30,9 @@ async function getPosts() {
         const response = await fetch('/api/recipes')
         const recipes = await response.json()
 
-        const userId = localStorage.getItem('userId')
+        const sessionResponse = await fetch('/api/user');
+        const sessionData = await sessionResponse.json();
+        const userId = sessionData.userId;
 
         const forumResponse = await fetch('/api/forum')
         const forum = await forumResponse.json()
@@ -100,7 +104,9 @@ async function addPost() {
     
     const date = `${day}/${month}/${year} ${formattedTime}`;
     
-    const userId = localStorage.getItem('userId')
+    const sessionResponse = await fetch('/api/user');
+    const sessionData = await sessionResponse.json();
+    const userId = sessionData.userId;
 
     const postData = {
         message: post,
@@ -136,14 +142,17 @@ async function checkRecipesList() {
         const listsResponse = await fetch('/api/lists');
         const lists = await listsResponse.json();
 
-        const userId = localStorage.getItem('userId');
+        const sessionResponse = await fetch('/api/user');
+        const sessionData = await sessionResponse.json();
+        const userId = sessionData.userId;
+
         const list = lists.find(list => list.UserId == userId);
 
         const recipeIdsInList = recipesList
-            .filter(recipeList => recipeList.listId == list.id)
-            .map(recipeList => recipeList.recipeId);
+            .filter(recipeList => recipeList.ListId == list.Id)
+            .map(recipeList => recipeList.RecipeId);
 
-        const listButtons = document.querySelectorAll('a input[type="checkbox"]');
+        const listButtons = document.querySelectorAll('div input[type="checkbox"]');
         listButtons.forEach(listButton => {
             const recipeId = listButton.id;
             if(recipeIdsInList.includes(parseInt(recipeId))) {
@@ -159,60 +168,51 @@ async function checkRecipesList() {
     }
 }
 
-async function addToList(checkbox) {
+async function handleCheckboxChange(checkbox) {
+    const recipeId = parseInt(checkbox.id);
+
     try {
-        const listsResponse = await fetch('/api/lists')
-        const recipesListresponse = await fetch('/api/recipesList')
-        const recipesList = await recipesListresponse.json()
-        const lists = await listsResponse.json()
+        const listsResponse = await fetch('/api/lists');
+        const recipesListResponse = await fetch('/api/recipesList');
+        const recipesList = await recipesListResponse.json();
+        const lists = await listsResponse.json();
 
-        const userId = localStorage.getItem('userId');
-        const list = lists.find(list => list.UserId == userId)
+        const sessionResponse = await fetch('/api/user');
+        const sessionData = await sessionResponse.json();
+        const userId = sessionData.userId;
 
-        const listId = list.Id
-        const recipeId = checkbox.id;
+        const list = lists.find(list => list.UserId == userId);
+        const listId = list.Id;
 
         if (checkbox.checked) {
             checkbox.style.background = 'url(../ASSETS/inList.png) center/contain no-repeat';
 
-            const recipesListData = {
-                recipeId,
-                listId
-            };
-
+            const recipesListData = { recipeId, listId };
             const response = await fetch('/api/recipesList', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(recipesListData)
             });
 
             if (!response.ok) {
                 alert("Failed to add the recipe to your list");
-                checkbox.checked = false;  // revert to unchecked if error
+                checkbox.checked = false;
                 checkbox.style.background = 'url(../ASSETS/notInList.png) center/contain no-repeat';
             }
         } else {
             checkbox.style.background = 'url(../ASSETS/notInList.png) center/contain no-repeat';
-            
-            const recipeList = recipesList.find(recipeList => recipeList.recipeId == recipeId && recipeList.listId == listId) 
 
-            const recipesListId = recipeList.id
+            const recipeList = recipesList.find(recipeList => recipeList.RecipeId == recipeId && recipeList.ListId == listId);
 
-            const response = await fetch(`/api/recipesList/${recipesListId}`, {
+            const response = await fetch(`/api/recipesList/${recipeList.Id}`, {
                 method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' }
             });
 
             if (!response.ok) {
-                alert("Failed to delete the recipe from your list");
-                checkbox.checked = true;  // revert to checked if error
+                alert("Failed to remove the recipe from your list");
+                checkbox.checked = true;
                 checkbox.style.background = 'url(../ASSETS/inList.png) center/contain no-repeat';
-            } else {
-                window.location.reload()
             }
         }
     } catch (error) {
@@ -222,8 +222,8 @@ async function addToList(checkbox) {
 
 getPosts().then(() => {
     checkRecipesList().then(() => {
-        document.querySelectorAll('a input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', () => addToList(checkbox));
+        document.querySelectorAll('div input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', () => handleCheckboxChange(checkbox));
         });
     });
 });

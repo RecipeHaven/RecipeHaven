@@ -16,7 +16,9 @@ document.getElementById('search-button').addEventListener('click', async () => {
         const listsResponse = await fetch('/api/lists');
         const lists = await listsResponse.json();
 
-        const userId = localStorage.getItem('userId')
+        const sessionResponse = await fetch('/api/user');
+        const sessionData = await sessionResponse.json();
+        const userId = sessionData.userId;
 
         const list = lists.find(list => list.UserId == userId);
 
@@ -81,7 +83,9 @@ document.getElementById('category').addEventListener('change', async (event) => 
     const recipesContainer = document.getElementById('recipes');
     recipesContainer.innerHTML = ''; 
 
-    const userId = localStorage.getItem('userId')
+    const sessionResponse = await fetch('/api/user');
+    const sessionData = await sessionResponse.json();
+    const userId = sessionData.userId;
 
     const recipesListResponse = await fetch('/api/recipesList');
     const recipesList = await recipesListResponse.json()
@@ -129,7 +133,9 @@ document.getElementById('difficulty').addEventListener('change', async (event) =
     const recipesContainer = document.getElementById('recipes');
     recipesContainer.innerHTML = ''; 
 
-    const userId = localStorage.getItem('userId')
+    const sessionResponse = await fetch('/api/user');
+    const sessionData = await sessionResponse.json();
+    const userId = sessionData.userId;
 
     const recipesListResponse = await fetch('/api/recipesList');
     const recipesList = await recipesListResponse.json()
@@ -159,6 +165,8 @@ document.getElementById('difficulty').addEventListener('change', async (event) =
     })
 })
 
+const response = await fetch('/api/recipes')
+let recipes = await response.json()
 
 fetchUserData()
-createRecipesCard()
+createRecipesCard(recipes)

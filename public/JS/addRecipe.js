@@ -1,6 +1,8 @@
 async function fetchUserData() {
     try {
-        const userId = localStorage.getItem('userId')
+        const sessionResponse = await fetch('/api/user');
+        const sessionData = await sessionResponse.json();
+        const userId = sessionData.userId;
 
         const usersResponse = await fetch('/api/users')
         let users = await usersResponse.json()
@@ -26,7 +28,9 @@ async function addRecipe() {
     const difficultyId = document.getElementById('difficulty').value
     const time = document.getElementById('time').value
     const cost = document.getElementById('cost').value
-    const userId = localStorage.getItem('userId')
+    const sessionResponse = await fetch('/api/user');
+    const sessionData = await sessionResponse.json();
+    const userId = sessionData.userId;
     const categoryId = document.getElementById('category').value
 
     const ingredients = Array.from(document.querySelectorAll('#ingredients input'))
