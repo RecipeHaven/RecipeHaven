@@ -19,8 +19,6 @@ const s3 = new S3Client({
 
 const router = express.Router()
 
-const url = 'https://localhost:7065/api' 
-
 const bucketName = 'fatphotos';
 
 // Configuração do multer para lidar com upload de arquivos

@@ -1,4 +1,26 @@
-import { fetchUserData } from './fetchUser.js'
+async function fetchUserData() {
+    try {
+        const sessionResponse = await fetch('/api/user');
+        const sessionData = await sessionResponse.json();
+        const userId = sessionData.userId;
+
+        const usersResponse = await fetch('/api/users')
+        let users = await usersResponse.json()
+        let user = users.find(user => user.Id == userId)
+
+        const profile = document.getElementById('profile')
+
+        if(userId != null) {
+            profile.innerHTML = `<img src='../ASSETS/profile.png' alt='Profile Photo' draggable='false'><span>${user.Name}</span>`
+            profile.href = `/user.html/${userId}`
+        } else {
+            profile.innerHTML = `<img src='../ASSETS/profile.png' alt='Profile Photo' draggable='false'><span>Signin</span>`
+            profile.href = '/signin.html'
+        }
+    } catch (error) {
+        console.error('Error fetching recipes:', error)
+    }
+}
 
 async function fetchRecipes() {
     try {
@@ -10,7 +32,7 @@ async function fetchRecipes() {
             const tr = document.createElement('tr')
             tr.innerHTML = `
                 <th scope="row">
-                    <input type="checkbox">
+                    <input type="checkbox" id='${recipe.Id}' class='list-input' onchange='addToList(${recipe.Id})'>
                 </th>
                 <td>${recipe.Id}</td>
                 <td>${recipe.Name}</td>
@@ -22,7 +44,7 @@ async function fetchRecipes() {
                 <td>
                     <button type="button" class="recipe-description" data-bs-toggle="modal" data-bs-target="#exampleModal">${recipe.Description}</button>
                 </td>
-                <td>${recipe.Time}</td>
+                <td><button type="button" class="recipe-time" data-bs-toggle="modal" data-bs-target="#exampleModal">${recipe.Time}</button></td>
                 <td>${recipe.Cost}</td>
                 <td>
                     ${getDifficulty(recipe.DifficultyId)}
@@ -44,6 +66,11 @@ async function fetchRecipes() {
                 const recipeDescriptionButton = tr.querySelector('.recipe-description');
                 recipeDescriptionButton.addEventListener('click', () => {
                     updateData('description', recipe)
+                });
+
+                const recipeTimeButton = tr.querySelector('.recipe-time');
+                recipeTimeButton.addEventListener('click', () => {
+                    updateData('time', recipe)
                 });
        
             tbody.appendChild(tr)
@@ -72,6 +99,12 @@ function updateData(dataType, recipe) {
             document.querySelector('.modal-body').innerHTML = `<textarea type="text" readonly>${recipe.Description}</textarea>`;
             document.querySelector('.modal-footer').innerHTML = '<button class="btn btn-warning edit">Edit</button>'
             setUpEditButton(recipe.Id, 'Description');
+            break;
+        case 'time':
+            document.querySelector('.modal-title').textContent = 'Recipe Time'
+            document.querySelector('.modal-body').innerHTML = `<textarea type="text" readonly>${recipe.Time}</textarea>`;
+            document.querySelector('.modal-footer').innerHTML = '<button class="btn btn-warning edit">Edit</button>'
+            setUpEditButton(recipe.Id, 'Time');
             break;
         default:
             break;
@@ -122,7 +155,14 @@ function setUpEditButton(recipeId, field) {
         document.querySelector('.modal-footer').innerHTML = "<button class='btn btn-primary save-changes'>Save Changes</button>";
 
         document.querySelector('.save-changes').addEventListener('click', async () => {
-            const value = textarea.value.trim();
+            let value
+
+            if(field == 'Time') {
+                value = parseInt(textarea.value)
+            } else {
+                value = textarea.value.trim();
+            }
+            console.log(value)
         
             try {
                 const response = await fetch(`/api/recipes/update/${recipeId}`, {
@@ -145,6 +185,33 @@ function setUpEditButton(recipeId, field) {
             }
         });        
     });
+}
+
+var list = []
+
+function addToList(number) {
+    list.push(number)
+}
+
+async function deleteRecipe() {
+    list.forEach(async recipe => {
+        try {
+            const response = await fetch(`/api/recipes/${recipe}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            });
+    
+            if (!response.ok) {
+                alert("Failed to delete the recipe");
+            } else {
+                window.location.reload()
+            }
+        } catch (error) {
+            console.log('An error occurred')
+        }
+    })
 }
 
 fetchUserData()
