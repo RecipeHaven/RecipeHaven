@@ -32,16 +32,24 @@ export async function fetchUserData() {
             const email = document.querySelector('#profile-info div p');
 
             if (currentUserId == userId) {
+                if(currentUser.Permissions == 0) {
+                    const adminOption = document.createElement('a')
+                    adminOption.textContent = 'Admin Options'
+                    adminOption.href = '/admin.html'
+                    document.querySelector('#profile-info div').appendChild(adminOption);
+                }
+                
                 const logout = document.createElement('a');
+                logout.id = 'logout'
                 logout.textContent = 'Logout';
                 logout.href = '/api/logout';
                 document.querySelector('#profile-info div').appendChild(logout);
 
-                document.querySelector('#profile-info div a').addEventListener('click', async () => {
+                document.getElementById('logout').addEventListener('click', async () => {
                     await fetch('/api/logout', { method: 'POST' });
                     redirectToSignin();
                 });
-            }
+            } 
 
             if (currentUser != null) {
                 name.textContent = currentUser.Name;

@@ -4,10 +4,13 @@ async function fetchUserData() {
         const sessionData = await sessionResponse.json();
         const userId = sessionData.userId;
 
-        const usersResponse = await fetch('/api/users')
-        let users = await usersResponse.json()
-        let user = users.find(user => user.Id == userId)
+        const usersResponse = await fetch(`/api/users/${userId}`)
+        let user = await usersResponse.json()
 
+        if(user.Permissions != 0){
+            window.location.replace('/')
+        }
+        
         const profile = document.getElementById('profile')
 
         if(userId != null) {
