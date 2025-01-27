@@ -44,7 +44,7 @@ async function getRecipesByDifficutyAndCategory(difficultyId, categoryId) {
 
 async function getRecipesByName(name) {
     const query = `SELECT * FROM recipes WHERE Name LIKE ?`;
-    const [rows] = await db.query(query, [`${name}%`]);
+    const [rows] = await db.query(query, [`%${name}%`]);
     return rows;
 }
 

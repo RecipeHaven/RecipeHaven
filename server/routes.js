@@ -25,7 +25,6 @@ const bucketName = 'fatphotos';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-// Função para upload da imagem e retorno do link
 router.post('/upload', upload.single('image'), async (req, res) => {
     const file = req.file;
 
@@ -45,10 +44,8 @@ router.post('/upload', upload.single('image'), async (req, res) => {
         const command = new PutObjectCommand(params);
         await s3.send(command);
 
-        // Gerar o URL da imagem
         const imageUrl = `https://${bucketName}.s3.${s3.config.region}.amazonaws.com/${fileName}`;
 
-        // Retornar o URL da imagem no corpo da resposta
         res.status(200).json({ imageUrl });
     } catch (error) {
         console.error('Erro ao fazer upload da imagem:', error);
