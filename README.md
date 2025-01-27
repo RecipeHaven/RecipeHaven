@@ -18,7 +18,7 @@ Este projeto é um site de receitas desenvolvido como parte da cadeira de Progra
 
 - **Backend**: Node.js com Express
 - **Base de Dados**: MySQL
-- **Documentação da API**: Swagger
+- **Documentação da API**: TheMealDB
 - **Autenticação**: JWT (JSON Web Token)
 - **Gestão de Dependências**: npm
 
