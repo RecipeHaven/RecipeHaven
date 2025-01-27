@@ -1,7 +1,5 @@
 # RecipeHaven
 
-## README - Site de Receitas
-
 📝 **Visão Geral**
 
 Este projeto é um site de receitas desenvolvido como parte da cadeira de Programação e Integração de Serviços. O site permite aos utilizadores explorar, filtrar e adicionar receitas. A aplicação foi construída com Node.js e Express, utilizando uma arquitetura modular e conectando-se a uma base de dados para gestão de receitas.
