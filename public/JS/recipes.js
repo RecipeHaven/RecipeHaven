@@ -5,7 +5,9 @@ document.getElementById('search-button').addEventListener('click', async () => {
     let search = document.getElementById('search').value.trim()
     
     if(search == '') {
-        createRecipesCard()
+        let response = await fetch(`/api/recipes`)
+        const recipes = await response.json()
+        createRecipesCard(recipes)
     } else {
         let response = await fetch(`/api/recipesByName/${search}`)
         const recipes = await response.json()
@@ -14,10 +16,12 @@ document.getElementById('search-button').addEventListener('click', async () => {
     }
 })
 
-document.querySelector('#filters button').addEventListener('click', () => {
+document.querySelector('#filters button').addEventListener('click', async () => {
     document.getElementById('category').value = 0
     document.getElementById('difficulty').value = 0
-    createRecipesCard()
+    let response = await fetch(`/api/recipes`)
+    const recipes = await response.json()
+    createRecipesCard(recipes)
 })
 
 document.querySelector('#filters-button input').addEventListener('change', (event) => {
