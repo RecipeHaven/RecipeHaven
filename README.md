@@ -26,20 +26,7 @@ Este projeto é um site de receitas desenvolvido como parte da cadeira de Progra
 
 🗂 **Estrutura do Projeto**
 
-root
-├── server
-│   ├── controllers
-│   ├── models
-│   ├── routes
-│   ├── services
-│   ├── utils
-│   └── app.js
-├── public
-│   ├── HTML
-│   │   └── recipes.html
-│   ├── CSS
-│   └── JS
-└── README.md
+![image](https://github.com/user-attachments/assets/d9dee85d-56dc-4e46-91b2-eb09aaed7519)
 
 markdown
 Copiar
