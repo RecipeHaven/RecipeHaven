@@ -12,10 +12,17 @@ Este projeto é um site de receitas desenvolvido como parte da cadeira de Progra
 - **Sistema de Autenticação**: Login seguro para gerir receitas pessoais.
 - **API Documentada com Swagger**: Interface interativa para explorar os endpoints disponíveis.
 
-⚙️ **Especificações Técnicas**
+## 🗄 **Setup da Base de Dados**
+
+### 1. **Criação da Base de Dados**  
+Certifique-se de que o MySQL está instalado e configurado no seu ambiente. Depois, execute o seguinte comando para criar a base de dados:  
+```sql
+CREATE DATABASE recipe_haven;
+```
 
 🛠 **Tecnologias Utilizadas**
 
+- **Frontend**: HTML, CSS, JS, Bootstrap
 - **Backend**: Node.js com Express
 - **Base de Dados**: MySQL
 - **Documentação da API**: TheMealDB
