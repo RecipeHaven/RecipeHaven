@@ -113,23 +113,18 @@ server
 
 1. Clone o repositório:
     ```bash
-    git clone https://github.com/username/repo-name.git
+    git clone
     ```
 
 2. Instale as dependências:
     ```bash
-    npm install
+    npm install express
+    npm install express-session
+    npm install axios
+    npm install mysql2/promise
     ```
 
-3. Configure as variáveis de ambiente no arquivo `.env`:
-    ```env
-    DB_HOST=your_database_host
-    DB_USER=your_database_user
-    DB_PASS=your_database_password
-    JWT_SECRET=your_jwt_secret
-    ```
-
-4. Inicie o servidor:
+3. Inicie o servidor:
     ```bash
     npm start
     ```
@@ -138,14 +133,15 @@ server
 
 🎯 **Público-Alvo**
 
-- Pessoas interessadas em descobrir novas receitas.
-- Utilizadores que desejam guardar e partilhar as suas próprias receitas.
+- Pessoas interessadas em descobrir novas receitas, publicar e disutir sobre novas receitas.
+- Utilizadores que desejam guardar ficar mais por dentro do mundo da gastronomia.
 
 🧭 **Fluxo de Utilização**
 
-- **Página Inicial**: Apresenta uma visão geral das receitas.
+- **Página Inicial**: Apresenta o logo do site e algumas receitas.
 - **Explorar Receitas**: Utilizadores podem aplicar filtros e pesquisar receitas específicas.
-- **Adicionar Receitas**: Após fazer login, o utilizador pode submeter uma nova receita.
+- **Adicionar Receitas**: Após fazer login, o utilizador pode submeter uma nova receita incluindo uma imagem à sua escolha.
+- **Gerir Receitas**: Permite que utilizadores com permissões extra possam aceder a uma página onde podem apagar ousimplesmente editar todas as receitas.
 - **Gerir Conta**: Permite o registo e autenticação do utilizador.
 
 💡 **Exemplos de Utilização**
@@ -157,7 +153,3 @@ server
 🤝 **Contribuições**
 
 Contribuições são bem-vindas! Por favor, abra um pull request ou issue para sugestões de melhorias.
-
-📜 **Licença**
-
-Este projeto está licenciado sob a MIT License.
