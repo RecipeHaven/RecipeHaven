@@ -19,7 +19,7 @@ Certifique-se de que o MySQL está instalado e configurado no seu ambiente. Depo
 ```sql
 CREATE DATABASE recipe_haven;
 ```
-Após isso execute  os comandos para criação das tabelas da base de dados:
+Após isso execute  os comandos para criação das tabelas na base de dados:
 ```sql
 CREATE TABLE users (
 	Id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
