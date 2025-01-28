@@ -28,11 +28,77 @@ Este projeto é um site de receitas desenvolvido como parte da cadeira de Progra
 
 🔗 **Endpoints Principais**
 
-- `GET /api/recipes`: Lista todas as receitas.
-- `POST /api/recipes`: Adiciona uma nova receita.
-- `GET /api/recipes/:id`: Retorna os detalhes de uma receita específica.
-- `POST /api/auth/login`: Realiza login do utilizador.
-- `POST /api/auth/register`: Regista um novo utilizador.
+## Upload
+- **POST** `/upload`  
+  Faz o upload de uma imagem para o S3.
+
+---
+
+## Receitas
+- **GET** `/api/recipes`  
+  Retorna todas as receitas.
+- **PATCH** `/api/recipes/update/:id`  
+  Atualiza campos específicos de uma receita.
+- **GET** `/api/recipes/:id`  
+  Retorna uma receita pelo ID.
+- **GET** `/api/recipes/difficulty/:difficultyId`  
+  Retorna receitas por dificuldade.
+- **GET** `/api/recipes/category/:categoryId`  
+  Retorna receitas por categoria.
+- **GET** `/api/recipes/:difficultyId/:categoryId`  
+  Retorna receitas por dificuldade e categoria.
+- **GET** `/api/recipesByName/:name`  
+  Retorna receitas pelo nome.
+- **DELETE** `/api/recipes/:id`  
+  Remove uma receita pelo ID.
+- **POST** `/api/recipe`  
+  Adiciona uma nova receita.
+
+---
+
+## Reviews
+- **GET** `/api/reviews`  
+  Retorna todas as reviews.
+- **POST** `/api/reviews`  
+  Adiciona uma nova review.
+- **DELETE** `/api/reviews/:id`  
+  Remove uma review pelo ID.
+
+---
+
+## Utilizadores
+- **GET** `/api/users`  
+  Retorna todos os utilizadores.
+- **GET** `/api/users/:id`  
+  Retorna um utilizador pelo ID.
+- **POST** `/api/users`  
+  Adiciona um novo utilizador.
+
+---
+
+## Listas
+- **GET** `/api/lists`  
+  Retorna todas as listas.
+- **POST** `/api/lists`  
+  Adiciona uma nova lista.
+
+---
+
+## Lista de Receitas
+- **GET** `/api/recipesList`  
+  Retorna todas as listas de receitas.
+- **POST** `/api/recipesList`  
+  Adiciona uma nova receita a uma lista.
+- **DELETE** `/api/recipesList/:id`  
+  Remove uma receita de uma lista pelo ID.
+
+---
+
+## Fórum
+- **GET** `/api/forum`  
+  Retorna todas as postagens do fórum.
+- **POST** `/api/forum`  
+  Adiciona uma nova postagem no fórum.
 
 🛠 **Instalação**
 
