@@ -10,7 +10,6 @@ Este projeto é um site de receitas desenvolvido como parte da cadeira de Progra
 - **Filtros Personalizados**: Filtrar receitas por categorias (e.g., sobremesas, pratos principais) e dificuldade.
 - **Adicionar Receitas**: Funcionalidade para utilizadores autenticados adicionarem novas receitas à base de dados.
 - **Sistema de Autenticação**: Login seguro para gerir receitas pessoais.
-- **API Documentada com Swagger**: Interface interativa para explorar os endpoints disponíveis.
 
 ## 🗄 **Setup da Base de Dados**
 
@@ -95,8 +94,6 @@ INSERT INTO categories(Category) VALUES ('Meal'), ('Dessert'), ('Drink'), ('Cock
 - **Frontend**: HTML, CSS, JS, Bootstrap
 - **Backend**: Node.js com Express
 - **Base de Dados**: MySQL
-- **Documentação da API**: TheMealDB
-- **Autenticação**: JWT (JSON Web Token)
 - **Gestão de Dependências**: npm
 
 🗂 **Estrutura do Projeto**
