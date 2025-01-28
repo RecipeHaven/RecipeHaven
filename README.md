@@ -201,9 +201,10 @@ server
     npm install mysql2/promise
     ```
 
-3. Inicie o servidor:
+3. Rodar o códido pelo terminal do VS Code:
     ```bash
-    npm start
+    cd server
+    nodemon server
     ```
 
 👤 **Especificações de Utilizador**
